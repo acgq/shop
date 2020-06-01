@@ -1,5 +1,6 @@
-package com.github.shop.service;
+package com.github.shop.service.impl;
 
+import com.github.shop.service.SmsCodeService;
 import org.springframework.stereotype.Service;
 
 @Service

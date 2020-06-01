@@ -5,5 +5,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface SmsCodeService {
 
-    public String sendVerificationCode(String tel);
+    String sendVerificationCode(String tel);
 }
