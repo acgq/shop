@@ -6,7 +6,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class CheckInputIsValidServiceImplTest {
-    public static final AuthController.TelAndCode VALID_TEL = new AuthController.TelAndCode("13000000000", null);
+    public static final AuthController.TelAndCode VALID_TEL =
+            new AuthController.TelAndCode("13000000000", null);
+    public static final AuthController.TelAndCode VALID_PARAMETER =
+            new AuthController.TelAndCode("13000000000", "000000");
     public static final AuthController.TelAndCode EMPTY_TEL = new AuthController.TelAndCode("", "");
 
 
