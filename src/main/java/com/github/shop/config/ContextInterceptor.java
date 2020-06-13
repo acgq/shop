@@ -42,7 +42,6 @@ public class ContextInterceptor implements HandlerInterceptor {
     //请求完成后从Context中清除用户信息
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
-
+        UserContext.clearUser();
     }
 }

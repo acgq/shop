@@ -21,11 +21,11 @@
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="db.mybatis" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="db.mybatis.mappers" targetProject="src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.github.shop.generate" targetProject="src/main/java/">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.github.shop.generate.mapper" targetProject="src/main/java/">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
@@ -35,6 +35,33 @@
             <columnOverride column="create_time" property="createTime" javaType="java.time.LocalDate"/>
             <columnOverride column="update_time" property="updateTime" javaType="java.time.LocalDate"/>
         </table>
-
+        <table schema="shop" tableName="shop_goods" domainObjectName="Goods">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="create_time" property="createTime" javaType="java.time.LocalDate"/>
+            <columnOverride column="update_time" property="updateTime" javaType="java.time.LocalDate"/>
+        </table>
+        <table schema="shop" tableName="shop_shopping_cart" domainObjectName="ShoppingCart">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="create_time" property="createTime" javaType="java.time.LocalDate"/>
+            <columnOverride column="update_time" property="updateTime" javaType="java.time.LocalDate"/>
+        </table>
+        <table schema="shop" tableName="shop_shop" domainObjectName="Shop">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="create_time" property="createTime" javaType="java.time.LocalDate"/>
+            <columnOverride column="update_time" property="updateTime" javaType="java.time.LocalDate"/>
+        </table>
+        <table schema="shop" tableName="shop_order" domainObjectName="Order">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnOverride column="create_time" property="createTime" javaType="java.time.LocalDate"/>
+            <columnOverride column="update_time" property="updateTime" javaType="java.time.LocalDate"/>
+        </table>
+        <table schema="shop" tableName="shop_order_goods" domainObjectName="OrderGoodsMapping">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
     </context>
 </generatorConfiguration>

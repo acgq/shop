@@ -84,7 +84,7 @@ public class CodeIntegrationTest {
     }
 
     public HttpResponse postRequest(String apiName, String body, List<String> cookies) {
-        HttpRequest request = HttpRequest.get(getUrl(apiName))
+        HttpRequest request = HttpRequest.post(getUrl(apiName))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE);
         if (cookies != null) {
@@ -107,6 +107,12 @@ public class CodeIntegrationTest {
 
         HttpResponse() {
         }
+    }
+
+    @Test
+    public void returnUnauthorizedWhenNotLogin() {
+        HttpResponse httpResponse = getRequest("/api/any", null);
+        Assertions.assertEquals(401, httpResponse.statusCode);
     }
 
 

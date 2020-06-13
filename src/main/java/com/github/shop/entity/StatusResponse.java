@@ -1,7 +1,6 @@
 package com.github.shop.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.github.shop.generate.User;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StatusResponse {
