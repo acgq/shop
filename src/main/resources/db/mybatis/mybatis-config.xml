@@ -6,8 +6,13 @@
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
-<!--    config mapper xml-->
+    <!--    config mapper xml-->
     <mappers>
-        <mapper resource="db/mybatis/UserMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/UserMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/GoodsMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/OrderGoodsMappingMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/OrderMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/ShopMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/ShoppingCartMapper.xml"/>
     </mappers>
 </configuration>

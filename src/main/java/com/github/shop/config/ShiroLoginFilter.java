@@ -1,7 +1,6 @@
 package com.github.shop.config;
 
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import javax.servlet.ServletRequest;
@@ -14,7 +13,7 @@ public class ShiroLoginFilter extends FormAuthenticationFilter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+        httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         return false;
     }
 }

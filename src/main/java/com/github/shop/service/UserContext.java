@@ -1,5 +1,7 @@
 package com.github.shop.service;
 
+import com.github.shop.generate.User;
+
 public class UserContext {
     private static final ThreadLocal<User> userInThread = new ThreadLocal<>();
 

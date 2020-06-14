@@ -1,5 +1,8 @@
 package com.github.shop.dao;
 
+import com.github.shop.generate.User;
+import com.github.shop.generate.UserExample;
+import com.github.shop.generate.mapper.UserMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

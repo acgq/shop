@@ -7,3 +7,4 @@ spring:
 
 mybatis:
   config-location: classpath:db/mybatis/mybatis-config.xml
+debug: true
