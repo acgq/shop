@@ -15,8 +15,7 @@
     <description>shop project</description>
 
     <properties>
-        <mybatis.generator.configurationFile>
-            ${basedir}/src/main/resources/db/generatorConfig.xml
+        <mybatis.generator.configurationFile>${basedir}/src/main/resources/db/generatorConfig.xml
         </mybatis.generator.configurationFile>
         <java.version>1.8</java.version>
     </properties>
@@ -41,6 +40,18 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
             <version>1.4.1</version>
+        </dependency>
+        <!--for jackson serialize-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <!-- for test-->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>6.4.4</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -114,9 +125,9 @@
                     </execution>
                     <execution>
                         <id>default-check</id>
-<!--                        <goals>-->
-<!--                            <goal>check</goal>-->
-<!--                        </goals>-->
+                        <!--                        <goals>-->
+                        <!--                            <goal>check</goal>-->
+                        <!--                        </goals>-->
                         <configuration>
                             <rules>
                                 <rule>
@@ -155,6 +166,11 @@
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
                         <version>8.0.20</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.qiukeke</groupId>
+                        <artifactId>mybatis-generator-limit-plugin</artifactId>
+                        <version>1.0.4</version>
                     </dependency>
                 </dependencies>
             </plugin>

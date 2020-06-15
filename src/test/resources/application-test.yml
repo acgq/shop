@@ -3,13 +3,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123456
-    url: jdbc:mysql://localhost:3306/shop?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://localhost:3307/shop?useUnicode=true&characterEncoding=utf8
 
 mybatis:
   config-location: classpath:db/mybatis/mybatis-config.xml
 #debug: true
 
-profile: dev
+profile: test
 
-custom:
-  config: hello

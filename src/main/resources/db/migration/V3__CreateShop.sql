@@ -16,3 +16,5 @@ insert into shop_shop (id, name, description, img_url, owner_user_id, status)
 VALUES (1, 'shop1', 'desc1', 'url1', 1, 'ok');
 insert into shop_shop (id, name, description, img_url, owner_user_id, status)
 VALUES (2, 'shop2', 'desc2', 'url2', 1, 'ok');
+insert into shop_shop (id, name, description, img_url, owner_user_id, status)
+VALUES (3, 'shop2', 'desc2', 'url2', 2, 'ok');

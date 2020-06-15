@@ -8,6 +8,9 @@ public class Response<T> {
         return new Response<>(data);
     }
 
+    public Response() {
+    }
+
     public Response(T data) {
         this.data = data;
     }
