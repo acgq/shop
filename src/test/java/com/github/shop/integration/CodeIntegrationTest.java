@@ -2,7 +2,7 @@ package com.github.shop.integration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.shop.ShopApplication;
-import com.github.shop.exception.StatusResponse;
+import com.github.shop.entity.StatusResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

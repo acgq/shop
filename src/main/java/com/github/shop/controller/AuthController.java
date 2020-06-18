@@ -1,6 +1,6 @@
 package com.github.shop.controller;
 
-import com.github.shop.exception.StatusResponse;
+import com.github.shop.entity.StatusResponse;
 import com.github.shop.generate.User;
 import com.github.shop.service.AuthService;
 import com.github.shop.service.InputCheckService;

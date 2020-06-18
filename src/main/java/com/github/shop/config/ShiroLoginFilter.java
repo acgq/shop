@@ -1,5 +1,7 @@
 package com.github.shop.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.shop.entity.Response;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.http.MediaType;
 
@@ -14,6 +16,8 @@ public class ShiroLoginFilter extends FormAuthenticationFilter {
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        String message = new ObjectMapper().writeValueAsString(Response.ofMessage("Unauthorized"));
+        httpServletResponse.getWriter().write(message);
         return false;
     }
 }

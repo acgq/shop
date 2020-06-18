@@ -6,8 +6,8 @@
 <generatorConfiguration>
 
     <context id="MySqlTables" targetRuntime="MyBatis3">
-        <plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin"></plugin>
-
+        <plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin"/>
+        <plugin type="com.qiukeke.mybatis.plugins.MySQLLimitPlugin" />
         <commentGenerator>
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>

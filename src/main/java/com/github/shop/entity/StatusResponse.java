@@ -1,4 +1,4 @@
-package com.github.shop.exception;
+package com.github.shop.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.shop.generate.User;
