@@ -109,6 +109,9 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.5</version>
+                <configuration>
+                    <excludes>**/generate/**/*</excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
@@ -125,9 +128,9 @@
                     </execution>
                     <execution>
                         <id>default-check</id>
-                        <!--                        <goals>-->
-                        <!--                            <goal>check</goal>-->
-                        <!--                        </goals>-->
+                        <!--<goals>-->
+                        <!--<goal>check</goal>-->
+                        <!--</goals>-->
                         <configuration>
                             <rules>
                                 <rule>
