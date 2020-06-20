@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.shop.dao.CustomShoppingCartMapper">
+    <resultMap id="SelectShoppingCartData" type="ShoppingCartData">
+        <id column="shop_id"/>
+        <association property="shop" javaType="Shop">
+            <id column="shop_id" jdbcType="BIGINT" property="id"/>
+            <result column="shop_name" jdbcType="VARCHAR" property="name"/>
+            <result column="shop_description" jdbcType="VARCHAR" property="description"/>
+            <result column="shop_img_url" jdbcType="VARCHAR" property="imgUrl"/>
+            <result column="shop_owner_user_id" jdbcType="BIGINT" property="ownerUserId"/>
+            <result column="shop_status" jdbcType="VARCHAR" property="status"/>
+            <result column="shop_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="shop_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        </association>
+        <collection property="goods" ofType="com.github.shop.entity.GoodsWithNumber">
+            <id column="goods_id" jdbcType="BIGINT" property="id"/>
+            <result column="goods_number" jdbcType="INTEGER" property="number"/>
+            <result column="goods_shop_id" jdbcType="BIGINT" property="shopId"/>
+            <result column="goods_name" jdbcType="VARCHAR" property="name"/>
+            <result column="goods_description" jdbcType="VARCHAR" property="description"/>
+            <result column="goods_img_url" jdbcType="VARCHAR" property="imgUrl"/>
+            <result column="goods_price" jdbcType="BIGINT" property="price"/>
+            <result column="goods_stock" jdbcType="INTEGER" property="stock"/>
+            <result column="goods_status" jdbcType="VARCHAR" property="status"/>
+            <result column="goods_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="goods_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        </collection>
+    </resultMap>
+    <select id="selectShoppingCartDataByUserId" resultMap="SelectShoppingCartData" parameterType="map">
+        select shop.id            as shop_id,
+               shop.name          as shop_name,
+               shop.owner_user_id as shop_owner_user_id,
+               shop.img_url       as shop_img_url,
+               shop.create_time   as shop_create_time,
+               shop.update_time   as shop_update_time,
+               goods.id           as goods_id,
+               goods.name         as goods_name,
+               goods.description  as goods_description,
+               goods.stock        as goods_stock,
+               goods.price        as goods_price,
+               goods.img_url      as goods_img_url,
+               goods.create_time  as goods_create_time,
+               goods.update_time  as goods_update_time,
+               t1.number          as goods_number
+        from (
+                 select shop_id, goods_id, number
+                 from shop_shopping_cart
+                 where user_id = #{userId}
+                 limit #{offset} ,#{pageSize}
+             ) t0
+                 join shop_shopping_cart as t1
+                      on t1.shop_id = t0.shop_id
+                 join shop_shop as shop on shop.id = t1.shop_id
+                 join shop_goods as goods on goods.id = t1.goods_id
+        where t1.user_id = #{userId}
+          and t1.status = 'ok';
+    </select>
+
+    <select id="countShopNumberByUserId" resultType="int" parameterType="long">
+        select count(distinct (shop_id))
+        from shop_shopping_cart
+        where user_id = #{userId}
+    </select>
+</mapper>

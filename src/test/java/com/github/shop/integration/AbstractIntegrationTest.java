@@ -2,6 +2,7 @@ package com.github.shop.integration;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.kevinsawicki.http.HttpRequest;
@@ -61,6 +62,10 @@ public class AbstractIntegrationTest {
                 .filter(header -> !header.contains("deleteMe"))
                 .map(s -> getSessionCookie(s))
                 .collect(Collectors.toList());
+    }
+    
+    public String toJson(Object data) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(data);
     }
     
     private String getUrl(String apiName) {
@@ -133,5 +138,14 @@ public class AbstractIntegrationTest {
             this.headers = headers;
         }
         
+        public <T> T asJson(TypeReference<T> typeReference) {
+            T res = null;
+            try {
+                res = objectMapper.readValue(body, typeReference);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+            return res;
+        }
     }
 }

@@ -6,6 +6,13 @@
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
+    <typeAliases>
+        <typeAlias type="com.github.shop.generate.Shop" alias="Shop"/>
+        <typeAlias type="com.github.shop.generate.Goods" alias="Goods"/>
+        <typeAlias type="com.github.shop.generate.User" alias="User"/>
+        <typeAlias type="com.github.shop.generate.ShoppingCart" alias="ShoppingCart"/>
+        <typeAlias type="com.github.shop.entity.ShoppingCartData" alias="ShoppingCartData"/>
+    </typeAliases>
     <!--    config mapper xml-->
     <mappers>
         <mapper resource="db/mybatis/mappers/UserMapper.xml"/>
@@ -14,5 +21,6 @@
         <mapper resource="db/mybatis/mappers/OrderMapper.xml"/>
         <mapper resource="db/mybatis/mappers/ShopMapper.xml"/>
         <mapper resource="db/mybatis/mappers/ShoppingCartMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/CustomShoppingCartMapper.xml"/>
     </mappers>
 </configuration>

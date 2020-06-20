@@ -17,7 +17,9 @@ values (1, 1, 1, 100, 'ok');
 insert into shop_shopping_cart (user_id, goods_id, shop_id, number, status)
 values (2, 2, 1, 300, 'ok');
 insert into shop_shopping_cart (user_id, goods_id, shop_id, number, status)
-values (3, 3, 2, 500, 'ok');
+values (1, 3, 2, 500, 'ok');
+insert into shop_shopping_cart (user_id, goods_id, shop_id, number, status)
+values (1, 4, 2, 100, 'ok');
 
 
 

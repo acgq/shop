@@ -9,7 +9,8 @@ public class PageResponse<T> {
     private List<T> data;
     
     public static <T> PageResponse of(int pageSize,
-                                      int pageNum, int totalPage,
+                                      int pageNum,
+                                      int totalPage,
                                       List<T> data) {
         PageResponse<T> response = new PageResponse<>();
         response.setPageNum(pageNum);

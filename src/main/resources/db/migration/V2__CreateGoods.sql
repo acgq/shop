@@ -16,10 +16,10 @@ create table shop_goods
   collate = utf8mb4_unicode_ci;
 
 insert into shop_goods (id, shop_id, name, description, details, img_url, price, stock, status)
-values (1, 1, 'goods1', 'desc1', 'detail1', 'url1', 100, 5, 'ok');
+values (1, 1, 'goods1', 'desc1', 'detail1', 'url1', 100, 5000, 'ok');
 insert into shop_goods (id, shop_id, name, description, details, img_url, price, stock, status)
-values (2, 1, 'goods2', 'desc2', 'detail2', 'url2', 100, 5, 'ok');
+values (2, 1, 'goods2', 'desc2', 'detail2', 'url2', 200, 5000, 'ok');
 insert into shop_goods (id, shop_id, name, description, details, img_url, price, stock, status)
-values (3, 2, 'goods3', 'desc3', 'detail3', 'url3', 100, 5, 'ok');
+values (3, 2, 'goods3', 'desc3', 'detail3', 'url3', 300, 5000, 'ok');
 insert into shop_goods (id, shop_id, name, description, details, img_url, price, stock, status)
-values (4, 2, 'goods4', 'desc4', 'detail4', 'url4', 100, 5, 'ok');
+values (4, 2, 'goods4', 'desc4', 'detail4', 'url4', 400, 5000, 'ok');

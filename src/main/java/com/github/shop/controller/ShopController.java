@@ -77,6 +77,40 @@ public class ShopController {
     }
     
     /**
+     * @api {DELETE} /shop/:id 删除店铺
+     * @apiName DeleteShop
+     * @apiGroup 店铺
+     *
+     * @apiHeader {String} Accept application/json
+     *
+     * @apiParam {Number} id 店铺ID
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 204 No Content
+     *     {
+     *       "data": {
+     *              "id": 12345,
+     *              "name": "我的店铺",
+     *              "description": "我的苹果专卖店",
+     *              "imgUrl": "https://img.url",
+     *              "ownerUserId": 12345,
+     *              "createdAt": "2020-03-22T13:22:03Z",
+     *              "updatedAt": "2020-03-22T13:22:03Z"
+     *       }
+     *     }
+     *
+     * @apiError 400 Bad Request 若用户的请求中包含错误
+     * @apiError 404 Not Found 若店铺未找到
+     * @apiError 401 Unauthorized 若用户未登录
+     * @apiError 403 Forbidden 若用户尝试删除非自己管理店铺
+     *
+     * @apiErrorExample Error-Response:
+     *     HTTP/1.1 401 Unauthorized
+     *     {
+     *       "message": "Unauthorized"
+     *     }
+     */
+    /**
      * delete shop.
      *
      * @param shopId
