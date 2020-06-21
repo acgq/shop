@@ -179,7 +179,9 @@ public class ShoppingCartController {
     // @formatter:on
     @PostMapping("/shoppingCart")
     public Response<ShoppingCartData> addToShoppingCart(@RequestBody ShoppingCartInfo goodsInfo) {
-        return null;
+        Long userId = UserContext.getUser().getId();
+        ShoppingCartData shoppingCartData = shoppingCartService.addGoodsToShoppingCart(userId, goodsInfo);
+        return Response.ofData(shoppingCartData);
     }
     
     public static class ShoppingCartInfo {
@@ -284,6 +286,10 @@ public class ShoppingCartController {
      */
     @DeleteMapping("/shoppingCart/{id}")
     public Response<ShoppingCartData> deleteGoodsInShoppingCart(@PathVariable("id") Long goodsId) {
-        return Response.ofData(shoppingCartService.deleteShoppingCart(goodsId));
+        if (goodsId < 1) {
+            throw new BadRequestException("请求参数不合法");
+        }
+        Long userId = UserContext.getUser().getId();
+        return Response.ofData(shoppingCartService.deleteShoppingCart(userId, goodsId));
     }
 }

@@ -13,4 +13,7 @@ public interface CustomShoppingCartMapper {
     List<ShoppingCartData> selectShoppingCartDataByUserId(@Param("userId") long userId,
                                                           @Param("offset") int offset,
                                                           @Param("pageSize") int pageSize);
+    
+    ShoppingCartData selectShoppingCartDataByUserIdAndShopId(@Param("userId") long userId,
+                                                             @Param("shopId") long shopId);
 }

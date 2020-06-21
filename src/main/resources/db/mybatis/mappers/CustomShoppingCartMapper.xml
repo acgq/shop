@@ -18,6 +18,7 @@
             <result column="goods_number" jdbcType="INTEGER" property="number"/>
             <result column="goods_shop_id" jdbcType="BIGINT" property="shopId"/>
             <result column="goods_name" jdbcType="VARCHAR" property="name"/>
+            <result column="shop_id" jdbcType="BIGINT" property="shopId"/>
             <result column="goods_description" jdbcType="VARCHAR" property="description"/>
             <result column="goods_img_url" jdbcType="VARCHAR" property="imgUrl"/>
             <result column="goods_price" jdbcType="BIGINT" property="price"/>
@@ -61,5 +62,31 @@
         select count(distinct (shop_id))
         from shop_shopping_cart
         where user_id = #{userId}
+    </select>
+
+    <select id="selectShoppingCartDataByUserIdAndShopId" resultMap="SelectShoppingCartData">
+        select shop.id            as shop_id,
+               shop.name          as shop_name,
+               shop.owner_user_id as shop_owner_user_id,
+               shop.img_url       as shop_img_url,
+               shop.create_time   as shop_create_time,
+               shop.update_time   as shop_update_time,
+               goods.id           as goods_id,
+               goods.name         as goods_name,
+               goods.description  as goods_description,
+               goods.stock        as goods_stock,
+               goods.price        as goods_price,
+               goods.img_url      as goods_img_url,
+               goods.status       as goods_status,
+               goods.create_time  as goods_create_time,
+               goods.update_time  as goods_update_time,
+               t1.number          as goods_number
+        from shop_shopping_cart as t1
+                 join shop_shop as shop on shop.id = t1.shop_id
+                 join shop_goods as goods on goods.id = t1.goods_id
+        where t1.user_id = #{userId}
+          and t1.shop_id = #{shopId}
+          and t1.status = 'ok'
+          and goods.status = 'ok'
     </select>
 </mapper>

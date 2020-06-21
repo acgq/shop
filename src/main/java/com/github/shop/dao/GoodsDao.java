@@ -68,4 +68,10 @@ public class GoodsDao {
         return (int) goodsMapper.countByExample(goodsExample);
     }
     
+    public List<Goods> getGoodsInList(List<Long> goodsIdList) {
+        GoodsExample goodsExample = new GoodsExample();
+        goodsExample.createCriteria().andIdIn(goodsIdList);
+        
+        return goodsMapper.selectByExample(goodsExample);
+    }
 }

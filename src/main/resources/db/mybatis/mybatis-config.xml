@@ -15,12 +15,12 @@
     </typeAliases>
     <!--    config mapper xml-->
     <mappers>
-        <mapper resource="db/mybatis/mappers/UserMapper.xml"/>
-        <mapper resource="db/mybatis/mappers/GoodsMapper.xml"/>
-        <mapper resource="db/mybatis/mappers/OrderGoodsMappingMapper.xml"/>
-        <mapper resource="db/mybatis/mappers/OrderMapper.xml"/>
-        <mapper resource="db/mybatis/mappers/ShopMapper.xml"/>
-        <mapper resource="db/mybatis/mappers/ShoppingCartMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/generate/UserMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/generate/GoodsMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/generate/OrderGoodsMappingMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/generate/OrderMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/generate/ShopMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/generate/ShoppingCartMapper.xml"/>
         <mapper resource="db/mybatis/mappers/CustomShoppingCartMapper.xml"/>
     </mappers>
 </configuration>

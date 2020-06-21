@@ -21,6 +21,3 @@ values (1, 3, 2, 500, 'ok');
 insert into shop_shopping_cart (user_id, goods_id, shop_id, number, status)
 values (1, 4, 2, 100, 'ok');
 
-
-
-

@@ -23,3 +23,5 @@ insert into shop_goods (id, shop_id, name, description, details, img_url, price,
 values (3, 2, 'goods3', 'desc3', 'detail3', 'url3', 300, 5000, 'ok');
 insert into shop_goods (id, shop_id, name, description, details, img_url, price, stock, status)
 values (4, 2, 'goods4', 'desc4', 'detail4', 'url4', 400, 5000, 'ok');
+insert into shop_goods (id, shop_id, name, description, details, img_url, price, stock, status)
+values (5, 2, 'goods5', 'desc5', 'detail4', 'url4', 400, 5000, 'ok');
