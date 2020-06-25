@@ -24,6 +24,9 @@ public class ShiroConfig {
     @Value("${spring.redis.port}")
     private String redisPort;
     
+    public ShiroConfig() {
+    }
+    
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();

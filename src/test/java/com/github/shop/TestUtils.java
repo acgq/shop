@@ -3,6 +3,8 @@ package com.github.shop;
 import com.github.shop.generate.Goods;
 import com.github.shop.generate.Shop;
 
+import java.math.BigDecimal;
+
 public class TestUtils {
     
     public static Shop createShopInstance(Long ownerId, int customNum) {
@@ -14,11 +16,12 @@ public class TestUtils {
         
         return shop;
     }
+    
     public static Goods createGoodsInstance(Long shopId, int customNum) {
         Goods goods = new Goods();
         goods.setShopId(shopId);
         goods.setName("我的商品" + customNum);
-        goods.setPrice(1000L);
+        goods.setPrice(new BigDecimal(1000));
         goods.setStock(1000);
         goods.setImgUrl("http://img.img");
         goods.setDescription("我的商品很棒");

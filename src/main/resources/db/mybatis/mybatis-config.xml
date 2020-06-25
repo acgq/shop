@@ -12,6 +12,8 @@
         <typeAlias type="com.github.shop.generate.User" alias="User"/>
         <typeAlias type="com.github.shop.generate.ShoppingCart" alias="ShoppingCart"/>
         <typeAlias type="com.github.shop.entity.ShoppingCartData" alias="ShoppingCartData"/>
+        <typeAlias type="com.github.shop.entity.GoodsWithNumber" alias="GoodsWithNumber"/>
+        <typeAlias type="com.github.shop.entity.OrderInfo" alias="OrderInfo"/>
     </typeAliases>
     <!--    config mapper xml-->
     <mappers>
@@ -22,5 +24,6 @@
         <mapper resource="db/mybatis/mappers/generate/ShopMapper.xml"/>
         <mapper resource="db/mybatis/mappers/generate/ShoppingCartMapper.xml"/>
         <mapper resource="db/mybatis/mappers/CustomShoppingCartMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/CustomOrderMapper.xml"/>
     </mappers>
 </configuration>

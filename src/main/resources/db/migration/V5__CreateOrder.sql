@@ -3,7 +3,7 @@ create table shop_order
     id              bigint primary key auto_increment,
     user_id         bigint,
     shop_id         bigint,
-    total_price     bigint,      -- 单位为分
+    total_price     decimal,      -- 单位为分
     address         varchar(1024),
     express_company varchar(16),
     express_id      varchar(128),

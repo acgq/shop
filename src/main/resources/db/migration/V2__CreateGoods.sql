@@ -6,7 +6,7 @@ create table shop_goods
     description varchar(1024),
     details     text,
     img_url     varchar(1024),
-    price       bigint,      --  '单位为分'
+    price       decimal,      --  '单位为分'
     stock       int          not null default 0,
     status      varchar(16), --  "ok" 正常 , "deleted" 已删除
     create_time datetime     not null default now(),

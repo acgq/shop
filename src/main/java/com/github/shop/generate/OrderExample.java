@@ -1,5 +1,6 @@
 package com.github.shop.generate;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -315,52 +316,52 @@ public class OrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceEqualTo(Long value) {
+        public Criteria andTotalPriceEqualTo(BigDecimal value) {
             addCriterion("total_price =", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceNotEqualTo(Long value) {
+        public Criteria andTotalPriceNotEqualTo(BigDecimal value) {
             addCriterion("total_price <>", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceGreaterThan(Long value) {
+        public Criteria andTotalPriceGreaterThan(BigDecimal value) {
             addCriterion("total_price >", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceGreaterThanOrEqualTo(Long value) {
+        public Criteria andTotalPriceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("total_price >=", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceLessThan(Long value) {
+        public Criteria andTotalPriceLessThan(BigDecimal value) {
             addCriterion("total_price <", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceLessThanOrEqualTo(Long value) {
+        public Criteria andTotalPriceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("total_price <=", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceIn(List<Long> values) {
+        public Criteria andTotalPriceIn(List<BigDecimal> values) {
             addCriterion("total_price in", values, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceNotIn(List<Long> values) {
+        public Criteria andTotalPriceNotIn(List<BigDecimal> values) {
             addCriterion("total_price not in", values, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceBetween(Long value1, Long value2) {
+        public Criteria andTotalPriceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("total_price between", value1, value2, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceNotBetween(Long value1, Long value2) {
+        public Criteria andTotalPriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("total_price not between", value1, value2, "totalPrice");
             return (Criteria) this;
         }

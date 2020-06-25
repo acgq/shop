@@ -102,19 +102,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .map(ShoppingCartController.ShoppingCartItem::getGoodsId)
                 .collect(Collectors.toList());
         //查到所有要添加的商品
-        List<Goods> goodsList = goodsDao.getGoodsInList(goodsIdList);
-        Map<Long, Goods> idToGoodsInstance = getIdToGoodsMap(goodsIdList);
+        Map<Long, Goods> idToGoodsMap = goodsDao.getIdToGoodsMap(goodsIdList);
         //校验输入参数合法
-        if (idToGoodsInstance.values().stream()
+        if (idToGoodsMap.values().stream()
                 .map(Goods::getShopId)
                 .collect(Collectors.toSet())
                 .size() != 1) {
-            logger.debug("输入不合法{} {} {}", userId, goodsIdList, goodsList);
+            logger.debug("输入不合法{} {} ", userId, idToGoodsMap);
             throw new BadRequestException("非法输入");
         }
         
         //生成需要插入的数据.
-        List<ShoppingCart> goodsToAdd = rawDataToShoppingCartRow(userId, idToGoodsInstance, goodsInfo);
+        List<ShoppingCart> goodsToAdd = rawDataToShoppingCartRow(userId, idToGoodsMap, goodsInfo);
         Long shopId = goodsToAdd.get(0).getShopId();
         //批量插入购物车
         try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
@@ -156,9 +155,5 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .collect(Collectors.toList());
     }
     
-    private Map<Long, Goods> getIdToGoodsMap(List<Long> goodsIdList) {
-        List<Goods> goodsList = goodsDao.getGoodsInList(goodsIdList);
-        return goodsList.stream()
-                .collect(Collectors.toMap(Goods::getId, goods -> goods));
-    }
+    
 }

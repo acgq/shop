@@ -5,7 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="shop_id" jdbcType="BIGINT" property="shopId" />
-    <result column="total_price" jdbcType="BIGINT" property="totalPrice" />
+    <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="express_company" jdbcType="VARCHAR" property="expressCompany" />
     <result column="express_id" jdbcType="VARCHAR" property="expressId" />
@@ -121,7 +121,7 @@
       address, express_company, express_id, 
       status, create_time, update_time
       )
-    values (#{userId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT}, #{totalPrice,jdbcType=BIGINT}, 
+    values (#{userId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT}, #{totalPrice,jdbcType=DECIMAL}, 
       #{address,jdbcType=VARCHAR}, #{expressCompany,jdbcType=VARCHAR}, #{expressId,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
@@ -168,7 +168,7 @@
         #{shopId,jdbcType=BIGINT},
       </if>
       <if test="totalPrice != null">
-        #{totalPrice,jdbcType=BIGINT},
+        #{totalPrice,jdbcType=DECIMAL},
       </if>
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
@@ -209,7 +209,7 @@
         shop_id = #{record.shopId,jdbcType=BIGINT},
       </if>
       <if test="record.totalPrice != null">
-        total_price = #{record.totalPrice,jdbcType=BIGINT},
+        total_price = #{record.totalPrice,jdbcType=DECIMAL},
       </if>
       <if test="record.address != null">
         address = #{record.address,jdbcType=VARCHAR},
@@ -239,7 +239,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
       shop_id = #{record.shopId,jdbcType=BIGINT},
-      total_price = #{record.totalPrice,jdbcType=BIGINT},
+      total_price = #{record.totalPrice,jdbcType=DECIMAL},
       address = #{record.address,jdbcType=VARCHAR},
       express_company = #{record.expressCompany,jdbcType=VARCHAR},
       express_id = #{record.expressId,jdbcType=VARCHAR},
@@ -260,7 +260,7 @@
         shop_id = #{shopId,jdbcType=BIGINT},
       </if>
       <if test="totalPrice != null">
-        total_price = #{totalPrice,jdbcType=BIGINT},
+        total_price = #{totalPrice,jdbcType=DECIMAL},
       </if>
       <if test="address != null">
         address = #{address,jdbcType=VARCHAR},
@@ -287,7 +287,7 @@
     update shop_order
     set user_id = #{userId,jdbcType=BIGINT},
       shop_id = #{shopId,jdbcType=BIGINT},
-      total_price = #{totalPrice,jdbcType=BIGINT},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
       address = #{address,jdbcType=VARCHAR},
       express_company = #{expressCompany,jdbcType=VARCHAR},
       express_id = #{expressId,jdbcType=VARCHAR},

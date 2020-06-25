@@ -1,5 +1,6 @@
 package com.github.shop.generate;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 public class Order {
@@ -9,7 +10,7 @@ public class Order {
 
     private Long shopId;
 
-    private Long totalPrice;
+    private BigDecimal totalPrice;
 
     private String address;
 
@@ -47,11 +48,11 @@ public class Order {
         this.shopId = shopId;
     }
 
-    public Long getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Long totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 

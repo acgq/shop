@@ -1,5 +1,6 @@
 package com.github.shop.generate;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 public class Goods {
@@ -13,7 +14,7 @@ public class Goods {
 
     private String imgUrl;
 
-    private Long price;
+    private BigDecimal price;
 
     private Integer stock;
 
@@ -65,11 +66,11 @@ public class Goods {
         this.imgUrl = imgUrl == null ? null : imgUrl.trim();
     }
 
-    public Long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

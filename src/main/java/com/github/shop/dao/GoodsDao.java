@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class GoodsDao {
@@ -73,5 +75,15 @@ public class GoodsDao {
         goodsExample.createCriteria().andIdIn(goodsIdList);
         
         return goodsMapper.selectByExample(goodsExample);
+    }
+    
+    public Map<Long, Goods> getIdToGoodsMap(List<Long> goodsIdList) {
+        GoodsExample example = new GoodsExample();
+        example.createCriteria().andIdIn(goodsIdList);
+        
+        List<Goods> goodsList = goodsMapper.selectByExample(example);
+        Map<Long, Goods> idToGoodsMap = goodsList.stream()
+                .collect(Collectors.toMap(Goods::getId, goods -> goods));
+        return idToGoodsMap;
     }
 }
