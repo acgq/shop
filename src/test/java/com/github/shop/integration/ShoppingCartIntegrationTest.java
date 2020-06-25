@@ -66,9 +66,7 @@ public class ShoppingCartIntegrationTest extends AbstractIntegrationTest {
         goodsToInsert.setNumber(99);
         shoppingCartInfo.setGoods(Collections.singletonList(goodsToInsert));
         
-        String json = objectMapper.writeValueAsString(shoppingCartInfo);
-        
-        HttpResponse response = postRequest("/api/v1/shoppingCart", json, cookie);
+        HttpResponse response = postRequest("/api/v1/shoppingCart", shoppingCartInfo, cookie);
         Response<ShoppingCartData> shoppingCartData = response.asJson(new TypeReference<Response<ShoppingCartData>>() {
         });
         
@@ -80,8 +78,7 @@ public class ShoppingCartIntegrationTest extends AbstractIntegrationTest {
                 .collect(Collectors.toSet()));
         // add same goods again with number 1000
         goodsToInsert.setNumber(1000);
-        json = objectMapper.writeValueAsString(shoppingCartInfo);
-        response = postRequest("/api/v1/shoppingCart", json, cookie);
+        response = postRequest("/api/v1/shoppingCart", shoppingCartInfo, cookie);
         shoppingCartData = response.asJson(new TypeReference<Response<ShoppingCartData>>() {
         });
         

@@ -314,52 +314,52 @@ public class OrderGoodsMappingExample {
             return (Criteria) this;
         }
 
-        public Criteria andNumberEqualTo(Long value) {
+        public Criteria andNumberEqualTo(Integer value) {
             addCriterion("number =", value, "number");
             return (Criteria) this;
         }
 
-        public Criteria andNumberNotEqualTo(Long value) {
+        public Criteria andNumberNotEqualTo(Integer value) {
             addCriterion("number <>", value, "number");
             return (Criteria) this;
         }
 
-        public Criteria andNumberGreaterThan(Long value) {
+        public Criteria andNumberGreaterThan(Integer value) {
             addCriterion("number >", value, "number");
             return (Criteria) this;
         }
 
-        public Criteria andNumberGreaterThanOrEqualTo(Long value) {
+        public Criteria andNumberGreaterThanOrEqualTo(Integer value) {
             addCriterion("number >=", value, "number");
             return (Criteria) this;
         }
 
-        public Criteria andNumberLessThan(Long value) {
+        public Criteria andNumberLessThan(Integer value) {
             addCriterion("number <", value, "number");
             return (Criteria) this;
         }
 
-        public Criteria andNumberLessThanOrEqualTo(Long value) {
+        public Criteria andNumberLessThanOrEqualTo(Integer value) {
             addCriterion("number <=", value, "number");
             return (Criteria) this;
         }
 
-        public Criteria andNumberIn(List<Long> values) {
+        public Criteria andNumberIn(List<Integer> values) {
             addCriterion("number in", values, "number");
             return (Criteria) this;
         }
 
-        public Criteria andNumberNotIn(List<Long> values) {
+        public Criteria andNumberNotIn(List<Integer> values) {
             addCriterion("number not in", values, "number");
             return (Criteria) this;
         }
 
-        public Criteria andNumberBetween(Long value1, Long value2) {
+        public Criteria andNumberBetween(Integer value1, Integer value2) {
             addCriterion("number between", value1, value2, "number");
             return (Criteria) this;
         }
 
-        public Criteria andNumberNotBetween(Long value1, Long value2) {
+        public Criteria andNumberNotBetween(Integer value1, Integer value2) {
             addCriterion("number not between", value1, value2, "number");
             return (Criteria) this;
         }

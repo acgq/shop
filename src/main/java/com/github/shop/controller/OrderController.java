@@ -1,9 +1,7 @@
 package com.github.shop.controller;
 
-import com.github.shop.entity.OrderInfo;
-import com.github.shop.entity.OrderResponse;
-import com.github.shop.entity.PageResponse;
-import com.github.shop.entity.Response;
+import com.github.shop.entity.*;
+import com.github.shop.exception.BadRequestException;
 import com.github.shop.generate.Order;
 import com.github.shop.service.OrderService;
 import com.github.shop.service.UserContext;
@@ -108,18 +106,24 @@ public class OrderController {
     public PageResponse<OrderResponse> getOrder(@RequestParam("pageNum") Integer pageNum,
                                                 @RequestParam("pageSize") Integer pageSize,
                                                 @RequestParam(value = "status", required = false) String status) {
-        return null;
+        if (pageNum <= 0 || pageSize <= 0) {
+            throw new BadRequestException("请求非法");
+        }
+        return orderService.getOrder(UserContext.getUser().getId(),
+                pageNum,
+                pageSize,
+                OrderStatus.value(status));
     }
     
     /**
      * 根据id获取订单
      *
-     * @param id
+     * @param orderId
      * @return 订单
      */
     @GetMapping("/order/{id}")
-    public Response<OrderResponse> getOrderById(@PathVariable("id") long id) {
-        return Response.ofData(orderService.getOrderById(UserContext.getUser().getId(), id));
+    public Response<OrderResponse> getOrderById(@PathVariable("id") long orderId) {
+        return Response.ofData(orderService.getOrderById(orderId, UserContext.getUser().getId()));
     }
     
     
@@ -313,41 +317,6 @@ public class OrderController {
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 204 No Content
-     *     {
-     *       "data": {
-     *           "id": 12345,
-     *           "expressCompany": null,
-     *           "expressId": null,
-     *           "status": "pending",
-     *           "address": "XXX",
-     *           "shop": {
-     *              "id": 12345,
-     *              "name": "我的店铺",
-     *              "description": "我的苹果专卖店",
-     *              "imgUrl": "https://img.url",
-     *              "ownerUserId": 12345,
-     *              "createdAt": "2020-03-22T13:22:03Z",
-     *              "updatedAt": "2020-03-22T13:22:03Z"
-     *            },
-     *            "goods": [
-     *              {
-     *                  "id": 12345,
-     *                  "name": "肥皂",
-     *                  "description": "纯天然无污染肥皂",
-     *                  "details": "这是一块好肥皂",
-     *                  "imgUrl": "https://img.url",
-     *                  "address": "XXX",
-     *                  "price": 500,
-     *                  "number": 10,
-     *                  "createdAt": "2020-03-22T13:22:03Z",
-     *                  "updatedAt": "2020-03-22T13:22:03Z"
-     *              },
-     *              {
-     *                    ...
-     *              }
-     *           ]
-     *         }
-     *     }
      *
      * @apiError 400 Bad Request 若用户的请求中包含错误
      * @apiError 401 Unauthorized 若用户未登录
@@ -369,8 +338,10 @@ public class OrderController {
      * @return 删除后的订单
      */
     @DeleteMapping("/order/{id}")
-    public Response<OrderResponse> deleteOrder(@PathVariable("id") long orderId) {
-        return Response.ofData(orderService.deleteOrder(orderId, UserContext.getUser().getId()));
+    public Response<OrderResponse> deleteOrder(@PathVariable("id") long orderId, HttpServletResponse response) {
+        OrderResponse orderResponse = orderService.deleteOrder(orderId, UserContext.getUser().getId());
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return Response.ofData(orderResponse);
     }
     
     

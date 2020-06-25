@@ -10,6 +10,8 @@
         <typeAlias type="com.github.shop.generate.Shop" alias="Shop"/>
         <typeAlias type="com.github.shop.generate.Goods" alias="Goods"/>
         <typeAlias type="com.github.shop.generate.User" alias="User"/>
+        <typeAlias type="com.github.shop.generate.Order" alias="Order"/>
+        <typeAlias type="com.github.shop.generate.OrderGoodsMapping" alias="OrderGoodsMapping"/>
         <typeAlias type="com.github.shop.generate.ShoppingCart" alias="ShoppingCart"/>
         <typeAlias type="com.github.shop.entity.ShoppingCartData" alias="ShoppingCartData"/>
         <typeAlias type="com.github.shop.entity.GoodsWithNumber" alias="GoodsWithNumber"/>

@@ -2,6 +2,8 @@ package com.github.shop.service;
 
 import com.github.shop.entity.OrderInfo;
 import com.github.shop.entity.OrderResponse;
+import com.github.shop.entity.OrderStatus;
+import com.github.shop.entity.PageResponse;
 import com.github.shop.generate.Order;
 
 public interface OrderService {
@@ -16,4 +18,6 @@ public interface OrderService {
     OrderResponse updateOrderStatus(Order order, Long userId);
     
     OrderResponse getOrderById(Long orderId, long userId);
+    
+    PageResponse<OrderResponse> getOrder(Long id, Integer pageNum, Integer pageSize, OrderStatus value);
 }

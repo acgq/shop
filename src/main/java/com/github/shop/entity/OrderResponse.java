@@ -5,13 +5,14 @@ import com.github.shop.generate.Shop;
 
 import java.util.List;
 
-public class OrderResponse extends Order {
-    private long id;
+public class OrderResponse {
+    private Long id;
     private String expressCompany;
     private String expressId;
     private String status;
     private String address;
     private Shop shop;
+    private Long shopId;
     private List<GoodsWithNumber> goods;
     
     public OrderResponse(Order order) {
@@ -21,12 +22,49 @@ public class OrderResponse extends Order {
         setStatus(order.getStatus());
         setAddress(order.getAddress());
         setShopId(order.getShopId());
-        setTotalPrice(order.getTotalPrice());
-        setCreateTime(order.getCreateTime());
-        setUpdateTime(order.getUpdateTime());
     }
     
     public OrderResponse() {
+    }
+    
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+    public String getExpressCompany() {
+        return expressCompany;
+    }
+    
+    public void setExpressCompany(String expressCompany) {
+        this.expressCompany = expressCompany;
+    }
+    
+    public String getExpressId() {
+        return expressId;
+    }
+    
+    public void setExpressId(String expressId) {
+        this.expressId = expressId;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+    
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    public String getAddress() {
+        return address;
+    }
+    
+    public void setAddress(String address) {
+        this.address = address;
     }
     
     public Shop getShop() {
@@ -35,6 +73,14 @@ public class OrderResponse extends Order {
     
     public void setShop(Shop shop) {
         this.shop = shop;
+    }
+    
+    public Long getShopId() {
+        return shopId;
+    }
+    
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
     
     public List<GoodsWithNumber> getGoods() {

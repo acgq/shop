@@ -16,4 +16,21 @@
           and status = 'ok'
           and stock >= #{number}
     </update>
+    <update id="updateExpressInformation" parameterType="Order">
+        update shop_order
+        set express_company = #{expressCompany},
+            express_id      = #{expressId},
+            status          =#{status}
+        where id = #{id}
+    </update>
+    <update id="updateOrderStatus" parameterType="Order">
+        update shop_order
+        set status = #{status}
+        where id = #{id}
+    </update>
+    <delete id="deleteOrder" parameterType="long">
+        update shop_order
+        set status = 'deleted'
+        where id = #{id}
+    </delete>
 </mapper>

@@ -29,8 +29,8 @@ public class ShopIntegrationTest extends AbstractIntegrationTest {
     public void createShopAndUpdate() throws JsonProcessingException {
         List<String> cookie = loginAndGetCookie();
         //成功创建
-        String shopJson = objectMapper.writeValueAsString(TestUtils.createShopInstance(1L, 0));
-        HttpResponse response = postRequest("/api/v1/shop", shopJson, cookie);
+        Shop shopInstance = TestUtils.createShopInstance(1L, 0);
+        HttpResponse response = postRequest("/api/v1/shop", shopInstance, cookie);
         assertEquals(SC_CREATED, response.statusCode);
         Response<Shop> shopResponse = objectMapper.readValue(response.body, new TypeReference<Response<Shop>>() {
         });
@@ -43,10 +43,10 @@ public class ShopIntegrationTest extends AbstractIntegrationTest {
         });
         assertEquals(SC_OK, response.statusCode);
         //修改店铺
-        shopJson = objectMapper.writeValueAsString(TestUtils.createShopInstance(1L, 100));
-        response = updateRequest("/api/v1/shop/" + shopId, shopJson, null);
+        shopInstance = TestUtils.createShopInstance(1L, 100);
+        response = updateRequest("/api/v1/shop/" + shopId, shopInstance, null);
         assertEquals(SC_UNAUTHORIZED, response.statusCode);
-        response = updateRequest("/api/v1/shop/" + shopId, shopJson, cookie);
+        response = updateRequest("/api/v1/shop/" + shopId, shopInstance, cookie);
         assertEquals(SC_OK, response.statusCode);
         
         //删除店铺 fail
@@ -65,9 +65,7 @@ public class ShopIntegrationTest extends AbstractIntegrationTest {
         HttpResponse response;
         for (int i = 0; i < 21; i++) {
             response = postRequest("/api/v1/shop",
-                    objectMapper.writeValueAsString(
-                            TestUtils.createShopInstance(1L, i)
-                    ),
+                    TestUtils.createShopInstance(1L, i),
                     cookie);
             assertEquals(SC_CREATED, response.statusCode);
         }

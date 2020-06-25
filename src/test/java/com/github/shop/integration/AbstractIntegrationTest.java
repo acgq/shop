@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.kevinsawicki.http.HttpRequest;
-import com.github.shop.service.CheckInputIsValidServiceImplTest;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.ClassicConfiguration;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +17,9 @@ import org.springframework.http.MediaType;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.github.shop.TestUtils.VALID_PARAMETER;
+import static com.github.shop.TestUtils.VALID_PARAMETER_USER2;
 
 public class AbstractIntegrationTest {
     protected static ObjectMapper objectMapper = new ObjectMapper();
@@ -48,16 +50,21 @@ public class AbstractIntegrationTest {
     //login with login json
     //user id is 1 , which is created in V1__CreateUser.sql
     protected List<String> loginAndGetCookie() {
-        String loginJson = null;
-        try {
-            loginJson = objectMapper.writeValueAsString(CheckInputIsValidServiceImplTest.VALID_PARAMETER);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage());
-        }
         //发送验证码
-        postRequest("/api/code", loginJson, null);
+        postRequest("/api/code", VALID_PARAMETER, null);
         //登录
-        HttpResponse httpResponse = postRequest("/api/login", loginJson, null);
+        HttpResponse httpResponse = postRequest("/api/login", VALID_PARAMETER, null);
+        return httpResponse.headers.get("Set-Cookie").stream()
+                .filter(header -> !header.contains("deleteMe"))
+                .map(s -> getSessionCookie(s))
+                .collect(Collectors.toList());
+    }
+    
+    protected List<String> loginAndGetCookieWithUser2() {
+        //发送验证码
+        postRequest("/api/code", VALID_PARAMETER_USER2, null);
+        //登录
+        HttpResponse httpResponse = postRequest("/api/login", VALID_PARAMETER_USER2, null);
         return httpResponse.headers.get("Set-Cookie").stream()
                 .filter(header -> !header.contains("deleteMe"))
                 .map(s -> getSessionCookie(s))
@@ -90,12 +97,12 @@ public class AbstractIntegrationTest {
         return new HttpResponse(request.code(), request.body(), request.headers());
     }
     
-    public HttpResponse postRequest(String apiName, String body, List<String> cookies) {
+    public HttpResponse postRequest(String apiName, Object body, List<String> cookies) {
         return generalPost(apiName, body, cookies, HttpRequest.METHOD_POST);
     }
     
     
-    public HttpResponse updateRequest(String apiName, String body, List<String> cookies) {
+    public HttpResponse updateRequest(String apiName, Object body, List<String> cookies) throws JsonProcessingException {
         HttpRequest request = new HttpRequest(getUrl(apiName), HttpRequest.METHOD_POST)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE);
@@ -103,16 +110,16 @@ public class AbstractIntegrationTest {
             cookies.forEach(cookie -> request.header("Cookie", cookie));
         }
         request.header("X-HTTP-Method-Override", "PATCH");
-        HttpRequest send = request.send(body);
+        HttpRequest send = request.send(objectMapper.writeValueAsString(body));
         return new HttpResponse(send.code(), send.body(), send.headers());
     }
     
-    public HttpResponse deleteRequest(String apiName, String body, List<String> cookie) {
+    public HttpResponse deleteRequest(String apiName, Object body, List<String> cookie) {
         return generalPost(apiName, body, cookie, HttpRequest.METHOD_DELETE);
         
     }
     
-    private HttpResponse generalPost(String apiName, String body, List<String> cookies, String method) {
+    private HttpResponse generalPost(String apiName, Object body, List<String> cookies, String method) {
         if (!apiName.startsWith("/")) {
             apiName = "/" + apiName;
         }
@@ -122,7 +129,13 @@ public class AbstractIntegrationTest {
         if (cookies != null) {
             cookies.forEach(cookie -> request.header("Cookie", cookie));
         }
-        HttpRequest send = request.send(body);
+        String jsonBody = null;
+        try {
+            jsonBody = objectMapper.writeValueAsString(body);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        HttpRequest send = request.send(jsonBody);
         return new HttpResponse(send.code(), send.body(), send.headers());
     }
     

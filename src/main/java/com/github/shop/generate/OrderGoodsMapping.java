@@ -7,7 +7,7 @@ public class OrderGoodsMapping {
 
     private Long orderId;
 
-    private Long number;
+    private Integer number;
 
     public Long getId() {
         return id;
@@ -33,11 +33,11 @@ public class OrderGoodsMapping {
         this.orderId = orderId;
     }
 
-    public Long getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(Long number) {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 

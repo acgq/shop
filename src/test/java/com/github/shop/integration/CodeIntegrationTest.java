@@ -20,11 +20,10 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = ShopApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@TestPropertySource(properties = {"spring.config.location=classpath:application-test.yml"})
 @ActiveProfiles("test")
 public class CodeIntegrationTest extends AbstractIntegrationTest {
-
-
+    
+    
     @Test
     public void loginAndLogoutTest() throws JsonProcessingException {
         //cookie list
@@ -46,29 +45,27 @@ public class CodeIntegrationTest extends AbstractIntegrationTest {
         httpResponse = getRequest("/api/status", sessionCookie);
         statusResponse = objectMapper.readValue(httpResponse.body, StatusResponse.class);
         Assertions.assertFalse(statusResponse.isLogin());
-
+        
     }
-
-
+    
+    
     @Test
     public void returnUnauthorizedWhenNotLogin() {
         HttpResponse httpResponse = getRequest("/api/any", null);
         Assertions.assertEquals(401, httpResponse.statusCode);
     }
-
-
+    
+    
     @Test
     public void returnHttpOkWhenParameterValid() throws JsonProcessingException {
-        HttpResponse httpResponse = postRequest("/api/code",
-                objectMapper.writeValueAsString(VALID_TEL),
-                null);
+        HttpResponse httpResponse = postRequest("/api/code", VALID_TEL, null);
         Assertions.assertEquals(SC_OK, httpResponse.statusCode);
     }
-
+    
     @Test
     public void returnBadRequestWhenParaMeterInvalid() throws JsonProcessingException {
         HttpResponse httpResponse = postRequest("/api/code",
-                objectMapper.writeValueAsString(EMPTY_TEL),
+                EMPTY_TEL,
                 null);
         Assertions.assertEquals(SC_BAD_REQUEST, httpResponse.statusCode);
     }

@@ -38,8 +38,7 @@ public class GoodsIntegrationTest extends AbstractIntegrationTest {
     public void createGoods() throws JsonProcessingException {
         List<String> cookies = loginAndGetCookie();
         //assert create goods successful.
-        String goodsJson = objectMapper.writeValueAsString(goods);
-        HttpResponse httpResponse = postRequest("/api/v1/goods", goodsJson, cookies);
+        HttpResponse httpResponse = postRequest("/api/v1/goods", goods, cookies);
         assertEquals(SC_CREATED, httpResponse.statusCode);
         Response<Goods> goodsResponse = objectMapper.readValue(httpResponse.body, new TypeReference<Response<Goods>>() {
         });
@@ -47,8 +46,7 @@ public class GoodsIntegrationTest extends AbstractIntegrationTest {
         
         //assert not authenticated to create goods in shop 3.
         goods.setShopId(3L);
-        goodsJson = objectMapper.writeValueAsString(goods);
-        httpResponse = postRequest("/api/v1/goods", goodsJson, cookies);
+        httpResponse = postRequest("/api/v1/goods", goods, cookies);
         assertEquals(SC_FORBIDDEN, httpResponse.statusCode);
     }
     
@@ -64,8 +62,7 @@ public class GoodsIntegrationTest extends AbstractIntegrationTest {
         assertEquals(SC_OK, response.statusCode);
         assertEquals(1L, goodsResponse.getData().getId());
         //update goods.
-        String goodsJson = objectMapper.writeValueAsString(goods);
-        response = updateRequest("/api/v1/goods/1", goodsJson, cookie);
+        response = updateRequest("/api/v1/goods/1", goods, cookie);
         goodsResponse = objectMapper.readValue(response.body, new TypeReference<Response<Goods>>() {
         });
         assertEquals(SC_OK, response.statusCode);
@@ -81,7 +78,7 @@ public class GoodsIntegrationTest extends AbstractIntegrationTest {
         List<String> cookies = loginAndGetCookie();
         //create shop
         Shop shop = TestUtils.createShopInstance(1L, 0);
-        HttpResponse response = postRequest("/api/v1/shop", objectMapper.writeValueAsString(shop), cookies);
+        HttpResponse response = postRequest("/api/v1/shop", shop, cookies);
         
         Response<Shop> shopResponse = objectMapper.readValue(response.body, new TypeReference<Response<Shop>>() {
         });
@@ -92,8 +89,8 @@ public class GoodsIntegrationTest extends AbstractIntegrationTest {
         Long shopId = shopResponse.getData().getId();
         for (int i = 0; i < 20; i++) {
             Goods goods = TestUtils.createGoodsInstance(shopId, i);
-            int statusCode = postRequest("/api/v1/goods", objectMapper.writeValueAsString(goods), cookies).statusCode;
-            assertEquals(statusCode, SC_CREATED);
+            response = postRequest("/api/v1/goods", goods, cookies);
+            assertEquals(SC_CREATED, response.statusCode);
         }
         
         //get goods list
