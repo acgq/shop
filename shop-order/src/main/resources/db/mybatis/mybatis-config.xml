@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias type="com.github.shop.generate.Order" alias="Order"/>
+        <typeAlias type="com.github.shop.generate.OrderGoodsMapping" alias="OrderGoodsMapping"/>
+    </typeAliases>
+    <!--    config mapper xml-->
+    <mappers>
+        <mapper resource="db/mybatis/mappers/generate/OrderGoodsMappingMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/generate/OrderMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/CustomOrderMapper.xml"/>
+    </mappers>
+</configuration>
