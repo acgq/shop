@@ -21,11 +21,9 @@
     <mappers>
         <mapper resource="db/mybatis/mappers/generate/UserMapper.xml"/>
         <mapper resource="db/mybatis/mappers/generate/GoodsMapper.xml"/>
-        <mapper resource="db/mybatis/mappers/generate/OrderGoodsMappingMapper.xml"/>
-        <mapper resource="db/mybatis/mappers/generate/OrderMapper.xml"/>
         <mapper resource="db/mybatis/mappers/generate/ShopMapper.xml"/>
         <mapper resource="db/mybatis/mappers/generate/ShoppingCartMapper.xml"/>
         <mapper resource="db/mybatis/mappers/CustomShoppingCartMapper.xml"/>
-        <mapper resource="db/mybatis/mappers/CustomOrderMapper.xml"/>
+        <mapper resource="db/mybatis/mappers/GoodsStockMapper.xml"/>
     </mappers>
 </configuration>

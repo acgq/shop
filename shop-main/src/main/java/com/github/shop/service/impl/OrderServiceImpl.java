@@ -1,7 +1,6 @@
 package com.github.shop.service.impl;
 
 import com.github.shop.dao.GoodsDao;
-import com.github.shop.dao.OrderDao;
 import com.github.shop.dao.ShopDao;
 import com.github.shop.dao.UserDao;
 import com.github.shop.entity.*;
@@ -10,10 +9,10 @@ import com.github.shop.exception.ResourceNotFoundException;
 import com.github.shop.exception.UnauthenticatedException;
 import com.github.shop.generate.Goods;
 import com.github.shop.generate.Order;
-import com.github.shop.generate.OrderGoodsMapping;
 import com.github.shop.generate.Shop;
 import com.github.shop.rpc.RpcOrderService;
 import com.github.shop.service.OrderService;
+import org.apache.dubbo.config.annotation.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +28,20 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    private OrderDao orderDao;
     private GoodsDao goodsDao;
     private UserDao userDao;
     private ShopDao shopDao;
     
-    
+    //    @Reference(version = "1.0.0")
+    @Reference(version = "${shop.orderservice.version}")
     private RpcOrderService rpcOrderService;
     
     private Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     
     @Autowired
-    public OrderServiceImpl(OrderDao orderDao, GoodsDao goodsDao, UserDao userDao, ShopDao shopDao) {
-        this.orderDao = orderDao;
+    public OrderServiceImpl(GoodsDao goodsDao,
+                            UserDao userDao,
+                            ShopDao shopDao) {
         this.goodsDao = goodsDao;
         this.userDao = userDao;
         this.shopDao = shopDao;
@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
         if (orderInfo.getGoods().size() <= 0) {
             throw new BadRequestException("商品数量为需为正数");
         }
-        orderDao.deductStock(orderInfo);
+        goodsDao.deductStock(orderInfo);
     }
     
     @Override
@@ -82,13 +82,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new BadRequestException("无法计算总价"));
         //create new order instance
         Order order = createOrderInstance(userId, idToGoodsMap, totalPrice);
-        
-        Order orderInserted = orderDao.insertOrder(order);
-        //create order goods mapping
-        orderInfo.setOrderId(orderInserted.getId());
-        orderDao.insertOrderInfo(orderInfo);
-
-//        Order orderInserted = rpcOrderService.createOrder(orderInfo, order);
+        Order orderInserted = rpcOrderService.createOrder(orderInfo, order);
         //generate response
         return generateOrderResponse(goodsWithNumberList, orderInserted);
     }
@@ -127,12 +121,8 @@ public class OrderServiceImpl implements OrderService {
     
     @Override
     public OrderResponse deleteOrder(long orderId, Long userId) {
-        Order orderInDB = orderDao.getOrderById(orderId);
-        if (!checkIsOrderOwner(orderInDB, userId)) {
-            throw new UnauthenticatedException("不是订单创建者");
-        }
-        orderDao.deleteOrder(orderId);
-        return getOrderById(orderId, userId);
+        RpcOrderGoods rpcOrderGoods = rpcOrderService.deleteOrder(orderId, userId);
+        return getOrderResponseByRpcOrderGoods(rpcOrderGoods);
     }
     
     @Override
@@ -140,24 +130,16 @@ public class OrderServiceImpl implements OrderService {
         verify(() -> order.getId() == null
                 || order.getId() < 0, "订单id不合法:" + order.getId());
         
-        Order orderInDB = orderDao.getOrderById(order.getId());
-        if (!checkIsShopOwner(orderInDB, userId)) {
+        RpcOrderGoods rpcOrder = rpcOrderService.getOrderById(order.getId());
+        
+        if (!checkIsShopOwner(rpcOrder.getOrder(), userId)) {
             throw new UnauthenticatedException("没有权限修改订单信息");
         }
         //update express information
         order.setStatus(OrderStatus.DELIVERED.getName());
-        orderDao.updateExpressInformation(order);
-        return getOrderById(order.getId(), userId);
-    }
-    
-    private boolean checkIsOrderOwner(Order orderInDB, Long userId) {
-        if (orderInDB == null) {
-            throw new ResourceNotFoundException("找不到订单");
-        }
-        if (orderInDB.getUserId() != userId) {
-            return false;
-        }
-        return true;
+        //update order by rpc service
+        RpcOrderGoods rpcOrderGoods = rpcOrderService.updateExpressInformation(order);
+        return getOrderResponseByRpcOrderGoods(rpcOrderGoods);
     }
     
     
@@ -188,42 +170,55 @@ public class OrderServiceImpl implements OrderService {
         verify(() -> order.getId() == null
                 || order.getId() < 0, "订单id不合法:" + order.getId());
         
-        Order orderInDB = orderDao.getOrderById(order.getId());
-        checkIsOrderOwner(orderInDB, userId);
-        
-        orderDao.updateOrderStatus(order);
-        return getOrderById(order.getId(), userId);
+        RpcOrderGoods rpcOrderGoods = rpcOrderService.updateOrderStatus(order, userId);
+        return getOrderResponseByRpcOrderGoods(rpcOrderGoods);
     }
     
     @Override
     public OrderResponse getOrderById(Long orderId, long userId) {
-        Order order = orderDao.getOrderById(orderId);
+        RpcOrderGoods orderGoods = rpcOrderService.getOrderById(orderId);
+        Order order = orderGoods.getOrder();
         //get order
-        if (!checkIsShopOwner(order, userId) && !checkIsOrderOwner(order, userId)) {
+        if (!checkIsOrderOwner(order, userId)) {
+            throw new UnauthenticatedException(String.format("无权修改订单信息，用户:%s不是订单:%s的所有者",
+                    userId, order.getId()));
+        }
+        if (!checkIsShopOwner(order, userId)) {
             throw new UnauthenticatedException("没有权限获取订单信息");
         }
-        return getOrderResponseByOrderInDB(order);
+        return getOrderResponseByRpcOrderGoods(orderGoods);
     }
     
-    private OrderResponse getOrderResponseByOrderInDB(Order order) {
-        List<OrderGoodsMapping> orderGoodsInfo = orderDao.getOrderInfo(order.getId());
-        List<Long> goodsIdList = orderGoodsInfo.stream()
-                .map(OrderGoodsMapping::getGoodsId)
-                .collect(Collectors.toList());
-        
-        Map<Long, Goods> idToGoodsMap = goodsDao.getIdToGoodsMap(goodsIdList);
-        //get goods
-        List<GoodsWithNumber> goodsWithNumbers = orderGoodsInfo.stream()
-                .map(orderGoodsMapping -> {
-                    Goods goods = idToGoodsMap.get(orderGoodsMapping.getGoodsId());
-                    GoodsWithNumber goodsWithNumber = new GoodsWithNumber(goods);
-                    goodsWithNumber.setNumber(orderGoodsMapping.getNumber());
-                    return goodsWithNumber;
-                })
-                .collect(Collectors.toList());
-        
-        return generateOrderResponse(goodsWithNumbers, order);
+    private boolean checkIsOrderOwner(Order order, long userId) {
+        if (order == null) {
+            throw new ResourceNotFoundException("找不到订单");
+        }
+        if (order.getUserId() != userId) {
+            return false;
+        }
+        return true;
     }
+    
+    //should be deleted.
+//    private OrderResponse getOrderResponseByOrderInDB(Order order) {
+//        List<OrderGoodsMapping> orderGoodsInfo = orderDao.getOrderInfo(order.getId());
+//        List<Long> goodsIdList = orderGoodsInfo.stream()
+//                .map(OrderGoodsMapping::getGoodsId)
+//                .collect(Collectors.toList());
+//
+//        Map<Long, Goods> idToGoodsMap = goodsDao.getIdToGoodsMap(goodsIdList);
+//        //get goods
+//        List<GoodsWithNumber> goodsWithNumbers = orderGoodsInfo.stream()
+//                .map(orderGoodsMapping -> {
+//                    Goods goods = idToGoodsMap.get(orderGoodsMapping.getGoodsId());
+//                    GoodsWithNumber goodsWithNumber = new GoodsWithNumber(goods);
+//                    goodsWithNumber.setNumber(orderGoodsMapping.getNumber());
+//                    return goodsWithNumber;
+//                })
+//                .collect(Collectors.toList());
+//
+//        return generateOrderResponse(goodsWithNumbers, order);
+//    }
     
     /**
      * 根据userId分页获取order， 分页根据是订单数，而不是总商品数
@@ -231,17 +226,38 @@ public class OrderServiceImpl implements OrderService {
      * @param userId   用户id
      * @param pageNum  页码数
      * @param pageSize 每页最大的订单数
-     * @param value    订单状态
+     * @param status   订单状态
      * @return
      */
     @Override
-    public PageResponse<OrderResponse> getOrder(Long userId, Integer pageNum, Integer pageSize, OrderStatus value) {
-        int count = orderDao.countOrderNumberByUserId(userId);
-        int totalPage = count % pageSize == 0 ? count / pageSize : count / pageSize + 1;
-        List<Order> orders = orderDao.getOrderInPage(userId, pageSize, pageNum, value);
-        List<OrderResponse> pageResponse = orders.stream()
-                .map(order -> getOrderResponseByOrderInDB(order))
+    public PageResponse<OrderResponse> getOrder(Long userId, int pageNum, int pageSize, OrderStatus status) {
+        PageResponse<RpcOrderGoods> response = rpcOrderService.getOrders(userId, pageSize, pageNum, status);
+        
+        List<OrderResponse> orderResponses = response.getData().stream()
+                .map(this::getOrderResponseByRpcOrderGoods)
                 .collect(Collectors.toList());
-        return PageResponse.of(pageSize, pageNum, totalPage, pageResponse);
+        return PageResponse.of(pageSize, pageNum, response.getTotalPage(), orderResponses);
+    }
+    
+    private OrderResponse getOrderResponseByRpcOrderGoods(RpcOrderGoods rpcOrderGoods) {
+        List<GoodsWithNumber> goodsInfo = getGoodsWithNumberByGoodsInfo(rpcOrderGoods.getGoods());
+        OrderResponse response = new OrderResponse(rpcOrderGoods.getOrder());
+        response.setGoods(goodsInfo);
+        return response;
+    }
+    
+    private List<GoodsWithNumber> getGoodsWithNumberByGoodsInfo(List<GoodsInfo> goodsInfos) {
+        List<Long> goodsIdList = goodsInfos.stream()
+                .map(GoodsInfo::getId)
+                .collect(Collectors.toList());
+        Map<Long, Goods> idToGoodsMap = goodsDao.getIdToGoodsMap(goodsIdList);
+        return goodsInfos.stream()
+                .map(goodsInfo -> {
+                    Goods goods = idToGoodsMap.get(goodsInfo.getId());
+                    GoodsWithNumber goodsWithNumber = new GoodsWithNumber(goods);
+                    goodsWithNumber.setNumber(goodsInfo.getNumber());
+                    return goodsWithNumber;
+                })
+                .collect(Collectors.toList());
     }
 }

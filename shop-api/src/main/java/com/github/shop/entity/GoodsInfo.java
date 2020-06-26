@@ -1,6 +1,8 @@
 package com.github.shop.entity;
 
-public class GoodsInfo {
+import java.io.Serializable;
+
+public class GoodsInfo implements Serializable {
     
     private long id;
     private int number;

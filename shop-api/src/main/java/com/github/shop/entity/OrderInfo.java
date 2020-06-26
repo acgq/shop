@@ -1,8 +1,9 @@
 package com.github.shop.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class OrderInfo {
+public class OrderInfo implements Serializable {
     private long orderId;
     private List<GoodsInfo> goods;
     

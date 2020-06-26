@@ -10,6 +10,7 @@
         <plugin type="com.qiukeke.mybatis.plugins.MySQLLimitPlugin"/>
         <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
         <commentGenerator>
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>

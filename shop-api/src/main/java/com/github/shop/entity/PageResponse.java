@@ -1,8 +1,9 @@
 package com.github.shop.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PageResponse<T> {
+public class PageResponse<T> implements Serializable {
     private int pageNum;
     private int pageSize;
     private int totalPage;

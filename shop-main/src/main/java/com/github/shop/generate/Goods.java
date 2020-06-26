@@ -1,9 +1,10 @@
 package com.github.shop.generate;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public class Goods {
+public class Goods implements Serializable {
     private Long id;
 
     private Long shopId;
@@ -25,6 +26,8 @@ public class Goods {
     private Instant updateTime;
 
     private String details;
+
+    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

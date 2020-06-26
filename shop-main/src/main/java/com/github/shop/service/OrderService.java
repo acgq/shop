@@ -19,5 +19,5 @@ public interface OrderService {
     
     OrderResponse getOrderById(Long orderId, long userId);
     
-    PageResponse<OrderResponse> getOrder(Long id, Integer pageNum, Integer pageSize, OrderStatus value);
+    PageResponse<OrderResponse> getOrder(Long userId, int pageNum, int pageSize, OrderStatus value);
 }

@@ -1,6 +1,8 @@
 package com.github.shop.generate;
 
-public class OrderGoodsMapping {
+import java.io.Serializable;
+
+public class OrderGoodsMapping implements Serializable {
     private Long id;
 
     private Long goodsId;
@@ -8,6 +10,8 @@ public class OrderGoodsMapping {
     private Long orderId;
 
     private Integer number;
+
+    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

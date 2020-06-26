@@ -1,8 +1,9 @@
 package com.github.shop.generate;
 
+import java.io.Serializable;
 import java.time.Instant;
 
-public class ShoppingCart {
+public class ShoppingCart implements Serializable {
     private Long id;
 
     private Long userId;
@@ -18,6 +19,8 @@ public class ShoppingCart {
     private Instant createTime;
 
     private Instant updateTime;
+
+    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

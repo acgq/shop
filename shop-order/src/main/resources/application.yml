@@ -1,14 +1,11 @@
 spring:
   application:
-    name: shop-main
+    name: order-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123456
-    url: jdbc:mysql://localhost:3306/shop?useUnicode=true&characterEncoding=utf8
-  redis:
-    host: 127.0.0.1
-    port: 6379
+    url: jdbc:mysql://localhost:3306/order_service?useUnicode=true&characterEncoding=utf8
 
 mybatis:
   config-location: classpath:db/mybatis/mybatis-config.xml
@@ -16,8 +13,14 @@ mybatis:
 dubbo:
   registry:
     address: zookeeper://localhost:2181
-    timeout: 2000
+  scan:
+    base-packages: com.github.shop.impl
+  protocol:
+    name: dubbo
 
 shop:
   orderservice:
     version: 1.0.0
+    url: ""
+server:
+  port: 8081

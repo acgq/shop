@@ -9,6 +9,7 @@
     <typeAliases>
         <typeAlias type="com.github.shop.generate.Order" alias="Order"/>
         <typeAlias type="com.github.shop.generate.OrderGoodsMapping" alias="OrderGoodsMapping"/>
+        <typeAlias type="com.github.shop.entity.OrderInfo" alias="OrderInfo"/>
     </typeAliases>
     <!--    config mapper xml-->
     <mappers>

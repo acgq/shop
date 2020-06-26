@@ -3,6 +3,7 @@ package com.github.shop.dao;
 import com.github.shop.generate.User;
 import com.github.shop.generate.UserExample;
 import com.github.shop.generate.mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 public class UserDao {
     private final UserMapper userMapper;
     
+    @Autowired
     public UserDao(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
