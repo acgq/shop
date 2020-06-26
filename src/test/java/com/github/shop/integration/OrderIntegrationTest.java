@@ -108,6 +108,19 @@ public class OrderIntegrationTest extends AbstractIntegrationTest {
     
     @Test
     public void getOrdersSuccessful() {
-    
+        List<String> cookieWithUser2 = loginAndGetCookieWithUser2();
+        //create 10 order
+        for (int i = 0; i < 10; i++) {
+            createOrderWithTwoGoodsInShop1(cookieWithUser2);
+        }
+        //get order
+        
+        HttpResponse response = getRequest("/api/v1/order?pageSize=2&pageNum=3", cookieWithUser2);
+        PageResponse<OrderResponse> orderResponse = response.asJson(new TypeReference<PageResponse<OrderResponse>>() {
+        });
+        assertEquals(SC_OK, response.statusCode);
+        assertEquals(5, orderResponse.getTotalPage());
+        assertEquals(2, orderResponse.getData().size());
+        assertEquals(2, orderResponse.getData().get(0).getGoods().size());
     }
 }

@@ -205,14 +205,14 @@ public class OrderServiceImpl implements OrderService {
     private OrderResponse getOrderResponseByOrderInDB(Order order) {
         List<OrderGoodsMapping> orderGoodsInfo = orderDao.getOrderInfo(order.getId());
         List<Long> goodsIdList = orderGoodsInfo.stream()
-                .map(OrderGoodsMapping::getId)
+                .map(OrderGoodsMapping::getGoodsId)
                 .collect(Collectors.toList());
         
         Map<Long, Goods> idToGoodsMap = goodsDao.getIdToGoodsMap(goodsIdList);
         //get goods
         List<GoodsWithNumber> goodsWithNumbers = orderGoodsInfo.stream()
                 .map(orderGoodsMapping -> {
-                    Goods goods = idToGoodsMap.get(orderGoodsMapping.getId());
+                    Goods goods = idToGoodsMap.get(orderGoodsMapping.getGoodsId());
                     GoodsWithNumber goodsWithNumber = new GoodsWithNumber(goods);
                     goodsWithNumber.setNumber(orderGoodsMapping.getNumber());
                     return goodsWithNumber;
