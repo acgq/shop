@@ -50,7 +50,8 @@ public class RpcOrderServiceImpl implements RpcOrderService {
     
     @Override
     public RpcOrderGoods updateOrderStatus(Order order, Long userId) {
-        if (!checkIsOrderOwner(order, userId)) {
+        Order orderById = orderDao.getOrderById(order.getId());
+        if (!checkIsOrderOwner(orderById, userId)) {
             throw new UnauthenticatedException(String.format("无权修改订单信息，用户: %s 不是订单 %s的所有者",
                     userId, order.getId()));
         }

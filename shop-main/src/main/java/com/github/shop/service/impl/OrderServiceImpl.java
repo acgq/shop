@@ -179,11 +179,7 @@ public class OrderServiceImpl implements OrderService {
         RpcOrderGoods orderGoods = rpcOrderService.getOrderById(orderId);
         Order order = orderGoods.getOrder();
         //get order
-        if (!checkIsOrderOwner(order, userId)) {
-            throw new UnauthenticatedException(String.format("无权修改订单信息，用户:%s不是订单:%s的所有者",
-                    userId, order.getId()));
-        }
-        if (!checkIsShopOwner(order, userId)) {
+        if (!checkIsOrderOwner(order, userId) && !checkIsShopOwner(order, userId)) {
             throw new UnauthenticatedException("没有权限获取订单信息");
         }
         return getOrderResponseByRpcOrderGoods(orderGoods);
@@ -241,8 +237,10 @@ public class OrderServiceImpl implements OrderService {
     
     private OrderResponse getOrderResponseByRpcOrderGoods(RpcOrderGoods rpcOrderGoods) {
         List<GoodsWithNumber> goodsInfo = getGoodsWithNumberByGoodsInfo(rpcOrderGoods.getGoods());
+        Shop shop = shopDao.getShopById(rpcOrderGoods.getOrder().getShopId());
         OrderResponse response = new OrderResponse(rpcOrderGoods.getOrder());
         response.setGoods(goodsInfo);
+        response.setShop(shop);
         return response;
     }
     

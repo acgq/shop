@@ -10,6 +10,7 @@ import com.github.shop.generate.mapper.OrderGoodsMappingMapper;
 import com.github.shop.generate.mapper.OrderMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class OrderDao {
     
     private static Logger logger = LoggerFactory.getLogger(OrderDao.class);
     
+    @Autowired
     public OrderDao(CustomOrderMapper customOrderMapper,
                     OrderMapper orderMapper,
                     OrderGoodsMappingMapper orderGoodsMappingMapper) {
