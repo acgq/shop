@@ -41,11 +41,11 @@ public class RpcOrderServiceImpl implements RpcOrderService {
     public RpcOrderGoods deleteOrder(long orderId, Long userId) {
         Order orderInDB = orderDao.getOrderById(orderId);
         if (!checkIsOrderOwner(orderInDB, userId)) {
-            throw new UnauthenticatedException("不是订单创建者");
+            throw new UnauthenticatedException("不是订单所有者");
         }
         orderDao.deleteOrder(orderId);
         
-        return null;
+        return getOrderById(orderId);
     }
     
     @Override

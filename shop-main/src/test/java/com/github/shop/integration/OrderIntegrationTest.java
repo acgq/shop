@@ -59,6 +59,30 @@ public class OrderIntegrationTest extends AbstractIntegrationTest {
     }
     
     @Test
+    public void deductStock() {
+        OrderInfo orderInfo = new OrderInfo();
+        GoodsInfo goods1 = new GoodsInfo(1L, 1000);
+        GoodsInfo goods2 = new GoodsInfo(2L, 2000);
+        orderInfo.setGoods(Arrays.asList(goods1, goods2));
+        
+        List<String> cookieWithUser2 = loginAndGetCookieWithUser2();
+        //deduct stock success
+        HttpResponse response = postRequest("/api/v1/order", orderInfo, cookieWithUser2);
+        assertEquals(SC_CREATED, response.statusCode);
+        
+        //deduct stock fail;
+        orderInfo = new OrderInfo();
+        goods1 = new GoodsInfo(1L, 4000);
+        goods2 = new GoodsInfo(2L, 4000);
+        orderInfo.setGoods(Arrays.asList(goods1, goods2));
+        
+        response = postRequest("/api/v1/order", orderInfo, cookieWithUser2);
+        assertEquals(SC_BAD_REQUEST, response.statusCode);
+        assertTrue(response.body.contains("扣减库存失败"));
+        
+    }
+    
+    @Test
     public void updateOrderInfo() throws JsonProcessingException {
         List<String> cookieWithUser2 = loginAndGetCookieWithUser2();
         //user2 13900000000 create a order with two goods in shop 1.

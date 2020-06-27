@@ -1,22 +1,28 @@
 package com.github.shop.config;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.Filter;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 @Configuration
 public class ShiroConfig {
+    
+    private static final String COOKIE_NAME = "rememberMe"; //  cookie name
+    
+    private static final int EXPIRY_TIME = 86400; // rememberMe expiry time is 24h
     
     @Value("${spring.redis.host}")
     private String redisHost;
@@ -32,25 +38,33 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         
-        LinkedHashMap<String, String> patternMap = new LinkedHashMap<>();
-        patternMap.put("/api/code", "anon");
-        patternMap.put("/api/login", "anon");
-        patternMap.put("/api/register", "anon");
-        patternMap.put("/api/status", "anon");
-        patternMap.put("/**", "authc");
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(patternMap);
-        
-        Map<String, Filter> filterMap = new LinkedHashMap<>();
-        filterMap.put("authc", new ShiroLoginFilter());
-        shiroFilterFactoryBean.setFilters(filterMap);
         return shiroFilterFactoryBean;
     }
     
     @Bean
-    public SecurityManager securityManager(Realm realm, RedisCacheManager redisCacheManager) {
+    public SecurityManager securityManager(Realm realm, RedisCacheManager redisCacheManager,
+                                           RememberMeManager rememberMeManager) {
         DefaultSecurityManager securityManager = new DefaultWebSecurityManager(realm);
         securityManager.setCacheManager(redisCacheManager);
+        securityManager.setRememberMeManager(rememberMeManager);
+        securityManager.setSessionManager(new DefaultSessionManager());
+        SecurityUtils.setSecurityManager(securityManager);
         return securityManager;
+    }
+    
+    /**
+     * shiro default rememberMe is has security problems, use custom cipher key and set expiry time to 24h
+     *
+     * @return
+     */
+    @Bean
+    public RememberMeManager rememberMeManager() {
+        SimpleCookie cookie = new SimpleCookie(COOKIE_NAME);
+        cookie.setMaxAge(EXPIRY_TIME);
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(cookie);
+        cookieRememberMeManager.setCipherKey(Base64.decode("3AvVhmFLUs0KTA3KaTHGFg=="));  // RememberMe cookie encryption key default AES algorithm of key length (128, 256, 512)
+        return cookieRememberMeManager;
     }
     
     @Bean

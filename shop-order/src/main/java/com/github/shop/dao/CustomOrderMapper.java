@@ -9,11 +9,11 @@ public interface CustomOrderMapper {
     
     int insertOrderInfo(OrderInfo orderInfo);
     
-    void updateExpressInformation(Order order);
+    int updateExpressInformation(Order order);
     
-    void updateOrderStatus(Order order);
+    int updateOrderStatus(Order order);
     
-    void deleteOrder(long orderId);
+    int deleteOrder(long orderId);
     
     
 }

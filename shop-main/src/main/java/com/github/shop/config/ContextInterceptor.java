@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 /**
  * 使用拦截器来处理UserContext
@@ -18,12 +19,26 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class ContextInterceptor implements HandlerInterceptor {
     UserService userService;
-
+    
     @Autowired
     public ContextInterceptor(UserService userService) {
         this.userService = userService;
     }
-
+    
+    private boolean isWhitelist(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        return Arrays.asList(
+                "/api/v1/code",
+                "/api/v1/login",
+                "/api/v1/status",
+                "/api/v1/logout",
+                "/error",
+                "/",
+                "/index.html",
+                "/manifest.json"
+        ).contains(uri) || uri.startsWith("/static/");
+    }
+    
     //处理请前根据用户tel获得用户信息存入UserContext中
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -33,12 +48,12 @@ public class ContextInterceptor implements HandlerInterceptor {
         }
         return true;
     }
-
+    
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
+    
     }
-
+    
     //请求完成后从Context中清除用户信息
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {

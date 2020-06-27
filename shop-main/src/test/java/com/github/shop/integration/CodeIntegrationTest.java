@@ -29,20 +29,20 @@ public class CodeIntegrationTest extends AbstractIntegrationTest {
         //cookie list
         List<String> sessionCookie;
         //开始获取用户状态，login = false;
-        HttpResponse httpResponse = getRequest("/api/status", null);
+        HttpResponse httpResponse = getRequest("/api/v1/status", null);
         StatusResponse statusResponse = objectMapper.readValue(httpResponse.body, StatusResponse.class);
         Assertions.assertFalse(statusResponse.isLogin());
         //登录
         sessionCookie = loginAndGetCookie();
         //登录获取状态
-        httpResponse = getRequest("/api/status", sessionCookie);
+        httpResponse = getRequest("/api/v1/status", sessionCookie);
         statusResponse = objectMapper.readValue(httpResponse.body, StatusResponse.class);
         Assertions.assertTrue(statusResponse.isLogin());
         //登出
-        httpResponse = postRequest("/api/logout", "", sessionCookie);
+        httpResponse = postRequest("/api/v1/logout", "", sessionCookie);
         Assertions.assertEquals(SC_OK, httpResponse.statusCode);
         //检查登录状态
-        httpResponse = getRequest("/api/status", sessionCookie);
+        httpResponse = getRequest("/api/v1/status", sessionCookie);
         statusResponse = objectMapper.readValue(httpResponse.body, StatusResponse.class);
         Assertions.assertFalse(statusResponse.isLogin());
         
@@ -51,20 +51,20 @@ public class CodeIntegrationTest extends AbstractIntegrationTest {
     
     @Test
     public void returnUnauthorizedWhenNotLogin() {
-        HttpResponse httpResponse = getRequest("/api/any", null);
+        HttpResponse httpResponse = getRequest("/api/v1/any", null);
         Assertions.assertEquals(401, httpResponse.statusCode);
     }
     
     
     @Test
     public void returnHttpOkWhenParameterValid() throws JsonProcessingException {
-        HttpResponse httpResponse = postRequest("/api/code", VALID_TEL, null);
+        HttpResponse httpResponse = postRequest("/api/v1/code", VALID_TEL, null);
         Assertions.assertEquals(SC_OK, httpResponse.statusCode);
     }
     
     @Test
     public void returnBadRequestWhenParaMeterInvalid() throws JsonProcessingException {
-        HttpResponse httpResponse = postRequest("/api/code",
+        HttpResponse httpResponse = postRequest("/api/v1/code",
                 EMPTY_TEL,
                 null);
         Assertions.assertEquals(SC_BAD_REQUEST, httpResponse.statusCode);
