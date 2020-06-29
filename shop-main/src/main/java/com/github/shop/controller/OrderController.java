@@ -115,11 +115,68 @@ public class OrderController {
                 OrderStatus.value(status));
     }
     
+    // @formatter:off
     /**
-     * 根据id获取订单
+     * @api {GET} /api/v1/order/:id 根据订单id获取订单
+     * @apiName getOrderById
+     * @apiGroup 订单
      *
-     * @param orderId
-     * @return 订单
+     * @apiHeader {String} Accept application/json
+     *
+     * @apiParam  {Number} orderId 订单id
+     *
+     * @apiSuccess {Order} data 订单信息
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 201 Created
+     *     {
+     *       "data": {
+     *           "id": 12345,
+     *           "expressCompany": null,
+     *           "expressId": null,
+     *           "status": "pending",
+     *           "address": "XXX",
+     *           "shop": {
+     *              "id": 12345,
+     *              "name": "我的店铺",
+     *              "description": "我的苹果专卖店",
+     *              "imgUrl": "https://img.url",
+     *              "ownerUserId": 12345,
+     *              "createdAt": "2020-03-22T13:22:03Z",
+     *              "updatedAt": "2020-03-22T13:22:03Z"
+     *            },
+     *            "goods": [
+     *              {
+     *                  "id": 12345,
+     *                  "name": "肥皂",
+     *                  "description": "纯天然无污染肥皂",
+     *                  "details": "这是一块好肥皂",
+     *                  "imgUrl": "https://img.url",
+     *                  "address": "XXX",
+     *                  "price": 500,
+     *                  "number": 10,
+     *                  "createdAt": "2020-03-22T13:22:03Z",
+     *                  "updatedAt": "2020-03-22T13:22:03Z"
+     *              },
+     *              {
+     *                    ...
+     *              }
+     *           ]
+     *         }
+     *     }
+     *
+     * @apiError 400 Bad Request 若用户的请求中包含错误
+     * @apiError 401 Unauthorized 若用户未登录
+     * @apiError 403 Not Found 无权获取该订单信息
+     *
+     */
+    // @formatter:on
+    
+    /**
+     * get order info
+     *
+     * @param orderId order id
+     * @return order info
      */
     @GetMapping("/order/{id}")
     public Response<OrderResponse> getOrderById(@PathVariable("id") long orderId) {
@@ -200,6 +257,8 @@ public class OrderController {
     // @formatter:on
     
     /**
+     * create order
+     *
      * @param orderInfo 订单信息
      * @return 响应
      */
@@ -290,8 +349,8 @@ public class OrderController {
     /**
      * 更新订单
      *
-     * @param id
-     * @param order
+     * @param id    order id
+     * @param order order info to be updated
      * @return 更新后的订单
      */
     @RequestMapping(value = "/order/{id}", method = {RequestMethod.POST, RequestMethod.PATCH})

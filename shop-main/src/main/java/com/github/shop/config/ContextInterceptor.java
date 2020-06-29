@@ -1,9 +1,12 @@
 package com.github.shop.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.shop.entity.Response;
 import com.github.shop.service.UserContext;
 import com.github.shop.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -45,6 +48,16 @@ public class ContextInterceptor implements HandlerInterceptor {
         String tel = (String) SecurityUtils.getSubject().getPrincipal();
         if (tel != null) {
             userService.getUserByTel(tel).ifPresent(UserContext::setUser);
+        }
+        if (isWhitelist(request)) {
+            return true;
+        } else if (UserContext.getUser() == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            String message = new ObjectMapper().writeValueAsString(Response.ofMessage("Unauthorized"));
+            response.getWriter().write(message);
+            return false;
         }
         return true;
     }

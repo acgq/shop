@@ -6,11 +6,11 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
-import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +47,7 @@ public class ShiroConfig {
         DefaultSecurityManager securityManager = new DefaultWebSecurityManager(realm);
         securityManager.setCacheManager(redisCacheManager);
         securityManager.setRememberMeManager(rememberMeManager);
-        securityManager.setSessionManager(new DefaultSessionManager());
+        securityManager.setSessionManager(new DefaultWebSessionManager());
         SecurityUtils.setSecurityManager(securityManager);
         return securityManager;
     }

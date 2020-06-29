@@ -16,6 +16,8 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.github.shop.TestUtils.VALID_PARAMETER;
@@ -51,20 +53,22 @@ public class AbstractIntegrationTest {
     //user id is 1 , which is created in V1__CreateUser.sql
     protected List<String> loginAndGetCookie() {
         //发送验证码
-        postRequest("/api/code", VALID_PARAMETER, null);
+        postRequest("/api/v1/code", VALID_PARAMETER, null);
         //登录
-        HttpResponse httpResponse = postRequest("/api/login", VALID_PARAMETER, null);
-        return httpResponse.headers.get("Set-Cookie").stream()
-                .filter(header -> !header.contains("deleteMe"))
-                .map(s -> getSessionCookie(s))
-                .collect(Collectors.toList());
+        HttpResponse httpResponse = postRequest("/api/v1/login", VALID_PARAMETER, null);
+        return Optional.ofNullable(httpResponse.headers.get("Set-Cookie"))
+                .map(headers -> headers.stream()
+                        .filter(header -> header.contains("JSESSIONID"))
+                        .map(s -> getSessionCookie(s))
+                        .collect(Collectors.toList()))
+                .orElse(null);
     }
     
     protected List<String> loginAndGetCookieWithUser2() {
         //发送验证码
-        postRequest("/api/code", VALID_PARAMETER_USER2, null);
+        postRequest("/api/v1/code", VALID_PARAMETER_USER2, null);
         //登录
-        HttpResponse httpResponse = postRequest("/api/login", VALID_PARAMETER_USER2, null);
+        HttpResponse httpResponse = postRequest("/api/v1/login", VALID_PARAMETER_USER2, null);
         return httpResponse.headers.get("Set-Cookie").stream()
                 .filter(header -> !header.contains("deleteMe"))
                 .map(s -> getSessionCookie(s))

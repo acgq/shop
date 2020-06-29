@@ -1,11 +1,13 @@
 package com.github.shop.controller;
 
 import com.github.shop.entity.StatusResponse;
+import com.github.shop.exception.UnauthenticatedException;
 import com.github.shop.generate.User;
 import com.github.shop.service.AuthService;
 import com.github.shop.service.InputCheckService;
 import com.github.shop.service.UserContext;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,14 +20,14 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthController {
     private final AuthService authService;
     private final InputCheckService inputCheckService;
-
+    
     @Autowired
     public AuthController(AuthService authService, InputCheckService inputCheckService) {
         this.authService = authService;
         this.inputCheckService = inputCheckService;
     }
-
-
+    
+    
     /**
      * @api {post} /code 请求验证码
      * @apiName GetCode
@@ -65,7 +67,7 @@ public class AuthController {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
         }
     }
-
+    
     /**
      * @api {get} /status 获取登录状态
      * @apiName Status
@@ -111,8 +113,8 @@ public class AuthController {
             return StatusResponse.notLoginResponse();
         }
     }
-
-
+    
+    
     /**
      * @api {post} /login 登录
      * @apiName Login
@@ -151,10 +153,14 @@ public class AuthController {
                 telAndCode.getTel(),
                 telAndCode.getCode());
         token.setRememberMe(true);
-        SecurityUtils.getSubject().login(token);
+        try {
+            SecurityUtils.getSubject().login(token);
+        } catch (AuthenticationException e) {
+            throw new UnauthenticatedException("验证码错误");
+        }
     }
-
-
+    
+    
     /**
      * @api {post} /logout 登出
      * @apiName Logout
@@ -177,29 +183,29 @@ public class AuthController {
     public void logout() {
         SecurityUtils.getSubject().logout();
     }
-
+    
     public static class TelAndCode {
         private String tel;
         private String code;
-
+        
         public TelAndCode(String tel, String code) {
             this.tel = tel;
             this.code = code;
         }
-
-
+        
+        
         public String getTel() {
             return tel;
         }
-
+        
         public void setTel(String tel) {
             this.tel = tel;
         }
-
+        
         public String getCode() {
             return code;
         }
-
+        
         public void setCode(String code) {
             this.code = code;
         }

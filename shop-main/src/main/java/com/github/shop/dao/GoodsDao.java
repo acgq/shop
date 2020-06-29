@@ -93,7 +93,7 @@ public class GoodsDao {
         return idToGoodsMap;
     }
     
-    @Transactional
+    @Transactional()
     public void deductStock(OrderInfo orderInfo) {
         List<GoodsInfo> goods = orderInfo.getGoods();
         for (GoodsInfo goodsInfo : goods) {
