@@ -168,8 +168,7 @@ public class OrderServiceImpl implements OrderService {
     
     @Override
     public OrderResponse updateOrderStatus(Order order, Long userId) {
-        verify(() -> order.getId() == null
-                || order.getId() < 0, "订单id不合法:" + order.getId());
+        verify(() -> order.getId() < 0, "订单id不合法:" + order.getId());
         
         RpcOrderGoods rpcOrderGoods = rpcOrderService.updateOrderStatus(order, userId);
         return getOrderResponseByRpcOrderGoods(rpcOrderGoods);
