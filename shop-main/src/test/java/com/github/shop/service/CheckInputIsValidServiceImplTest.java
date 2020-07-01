@@ -1,30 +1,26 @@
 package com.github.shop.service;
 
-import com.github.shop.controller.AuthController;
 import com.github.shop.service.impl.InputCheckServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static com.github.shop.TestUtils.EMPTY_TEL;
+import static com.github.shop.TestUtils.VALID_TEL;
+
 public class CheckInputIsValidServiceImplTest {
-    public static final AuthController.TelAndCode VALID_TEL =
-            new AuthController.TelAndCode("13800000000", null);
-    public static final AuthController.TelAndCode VALID_PARAMETER =
-            new AuthController.TelAndCode("13800000000", "000000");
-    public static final AuthController.TelAndCode EMPTY_TEL =
-            new AuthController.TelAndCode("", "");
-
-
+    
+    
     @Test
     public void testTelIsValid() {
         InputCheckService inputCheckService = new InputCheckServiceImpl();
         Assertions.assertTrue(inputCheckService.verifyTelParameter(VALID_TEL));
     }
-
+    
     @Test
     public void testTelIsInvalid() {
         InputCheckService inputCheckService = new InputCheckServiceImpl();
         Assertions.assertFalse(inputCheckService.verifyTelParameter(EMPTY_TEL));
         Assertions.assertFalse(inputCheckService.verifyTelParameter(null));
     }
-
+    
 }

@@ -33,7 +33,8 @@ public class OrderServiceImpl implements OrderService {
     private ShopDao shopDao;
     
     //    @Reference(version = "1.0.0")
-    @Reference(version = "${shop.orderservice.version}")
+    @Reference(version = "${shop.orderservice.version}",
+            url = "${shop.orderservice.url}")
     private RpcOrderService rpcOrderService;
     
     private Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
@@ -87,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
         return generateOrderResponse(goodsWithNumberList, orderInserted);
     }
     
-    private OrderResponse generateOrderResponse(List<GoodsWithNumber> goodsWithNumberList, Order orderInserted) {
+    protected OrderResponse generateOrderResponse(List<GoodsWithNumber> goodsWithNumberList, Order orderInserted) {
         OrderResponse orderResponse = new OrderResponse(orderInserted);
         orderResponse.setShop(shopDao.getShopById(orderInserted.getShopId()));
         orderResponse.setGoods(goodsWithNumberList);
@@ -108,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
     
-    private long getShopId(Map<Long, Goods> idToGoodsMap) {
+    protected long getShopId(Map<Long, Goods> idToGoodsMap) {
         Iterator<Goods> iterator = idToGoodsMap.values().iterator();
         long shopId = iterator.next().getShopId();
         while (iterator.hasNext()) {
@@ -132,6 +133,9 @@ public class OrderServiceImpl implements OrderService {
         
         RpcOrderGoods rpcOrder = rpcOrderService.getOrderById(order.getId());
         
+        if (rpcOrder == null) {
+            throw new ResourceNotFoundException("没有这个订单");
+        }
         if (!checkIsShopOwner(rpcOrder.getOrder(), userId)) {
             throw new UnauthenticatedException("没有权限修改订单信息");
         }
@@ -143,11 +147,8 @@ public class OrderServiceImpl implements OrderService {
     }
     
     
-    private boolean checkIsShopOwner(Order orderInDB, Long userId) {
+    protected boolean checkIsShopOwner(Order orderInDB, Long userId) {
         //判断用户是否是商店主人.
-        if (orderInDB == null) {
-            throw new ResourceNotFoundException("没有这个订单");
-        }
         Shop shopInDB = shopDao.getShopById(orderInDB.getShopId());
         if (shopInDB.getOwnerUserId() != userId) {
             logger.debug("没有权限修改订单 order:{} shop:{} user:{}", orderInDB, shopInDB, userId);
@@ -179,42 +180,21 @@ public class OrderServiceImpl implements OrderService {
         RpcOrderGoods orderGoods = rpcOrderService.getOrderById(orderId);
         Order order = orderGoods.getOrder();
         //get order
+        if (order == null) {
+            throw new ResourceNotFoundException("找不到订单");
+        }
         if (!checkIsOrderOwner(order, userId) && !checkIsShopOwner(order, userId)) {
             throw new UnauthenticatedException("没有权限获取订单信息");
         }
         return getOrderResponseByRpcOrderGoods(orderGoods);
     }
     
-    private boolean checkIsOrderOwner(Order order, long userId) {
-        if (order == null) {
-            throw new ResourceNotFoundException("找不到订单");
-        }
+    protected boolean checkIsOrderOwner(Order order, long userId) {
         if (order.getUserId() != userId) {
             return false;
         }
         return true;
     }
-    
-    //should be deleted.
-//    private OrderResponse getOrderResponseByOrderInDB(Order order) {
-//        List<OrderGoodsMapping> orderGoodsInfo = orderDao.getOrderInfo(order.getId());
-//        List<Long> goodsIdList = orderGoodsInfo.stream()
-//                .map(OrderGoodsMapping::getGoodsId)
-//                .collect(Collectors.toList());
-//
-//        Map<Long, Goods> idToGoodsMap = goodsDao.getIdToGoodsMap(goodsIdList);
-//        //get goods
-//        List<GoodsWithNumber> goodsWithNumbers = orderGoodsInfo.stream()
-//                .map(orderGoodsMapping -> {
-//                    Goods goods = idToGoodsMap.get(orderGoodsMapping.getGoodsId());
-//                    GoodsWithNumber goodsWithNumber = new GoodsWithNumber(goods);
-//                    goodsWithNumber.setNumber(orderGoodsMapping.getNumber());
-//                    return goodsWithNumber;
-//                })
-//                .collect(Collectors.toList());
-//
-//        return generateOrderResponse(goodsWithNumbers, order);
-//    }
     
     /**
      * 根据userId分页获取order， 分页根据是订单数，而不是总商品数
@@ -235,7 +215,7 @@ public class OrderServiceImpl implements OrderService {
         return PageResponse.of(pageSize, pageNum, response.getTotalPage(), orderResponses);
     }
     
-    private OrderResponse getOrderResponseByRpcOrderGoods(RpcOrderGoods rpcOrderGoods) {
+    protected OrderResponse getOrderResponseByRpcOrderGoods(RpcOrderGoods rpcOrderGoods) {
         List<GoodsWithNumber> goodsInfo = getGoodsWithNumberByGoodsInfo(rpcOrderGoods.getGoods());
         Shop shop = shopDao.getShopById(rpcOrderGoods.getOrder().getShopId());
         OrderResponse response = new OrderResponse(rpcOrderGoods.getOrder());
@@ -244,7 +224,7 @@ public class OrderServiceImpl implements OrderService {
         return response;
     }
     
-    private List<GoodsWithNumber> getGoodsWithNumberByGoodsInfo(List<GoodsInfo> goodsInfos) {
+    protected List<GoodsWithNumber> getGoodsWithNumberByGoodsInfo(List<GoodsInfo> goodsInfos) {
         List<Long> goodsIdList = goodsInfos.stream()
                 .map(GoodsInfo::getId)
                 .collect(Collectors.toList());

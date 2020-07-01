@@ -11,3 +11,16 @@ mybatis:
 
 profile: test
 
+dubbo:
+  registry:
+    address: N/A
+  scan:
+    base-packages: com.github.shop.mock
+  protocol:
+    name: dubbo
+    port: 12345
+
+shop:
+  orderservice:
+    version: 1.0.0
+    url: dubbo://127.0.0.1:12345

@@ -11,7 +11,8 @@ public class GoodsWithNumber extends Goods {
         this.setName(goods.getName());
         this.setDescription(goods.getDescription());
         this.setImgUrl(goods.getImgUrl());
-        this.setPrice(goods.getPrice());
+        this.
+                setPrice(goods.getPrice());
         this.setStock(goods.getStock());
         this.setStatus(goods.getStatus());
         this.setCreateTime(goods.getCreateTime());

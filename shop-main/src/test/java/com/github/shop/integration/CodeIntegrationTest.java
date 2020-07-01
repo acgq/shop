@@ -13,9 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static com.github.shop.TestUtils.VALID_PARAMETER;
-import static com.github.shop.service.CheckInputIsValidServiceImplTest.EMPTY_TEL;
-import static com.github.shop.service.CheckInputIsValidServiceImplTest.VALID_TEL;
+import static com.github.shop.TestUtils.*;
 import static javax.servlet.http.HttpServletResponse.*;
 
 
@@ -23,6 +21,22 @@ import static javax.servlet.http.HttpServletResponse.*;
 @SpringBootTest(classes = ShopApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class CodeIntegrationTest extends AbstractIntegrationTest {
+    @Test
+    public void loginFailedWithWrongCode() {
+        //login before send code
+        HttpResponse httpResponse = postRequest("/api/v1/login", VALID_TEL, null);
+        Assertions.assertEquals(SC_FORBIDDEN, httpResponse.statusCode);
+        
+        //发送验证码
+        postRequest("/api/v1/code", VALID_PARAMETER, null);
+        //login with wrong code
+        AuthController.TelAndCode wrong = new AuthController.TelAndCode(VALID_PARAMETER.getTel(), "123456");
+        httpResponse = postRequest("/api/v1/login", wrong, null);
+        Assertions.assertEquals(SC_FORBIDDEN, httpResponse.statusCode);
+        //login success
+        httpResponse = postRequest("/api/v1/login", VALID_PARAMETER, null);
+        Assertions.assertEquals(SC_OK, httpResponse.statusCode);
+    }
     
     
     @Test
@@ -46,23 +60,6 @@ public class CodeIntegrationTest extends AbstractIntegrationTest {
         httpResponse = getRequest("/api/v1/status", sessionCookie);
         statusResponse = objectMapper.readValue(httpResponse.body, StatusResponse.class);
         Assertions.assertFalse(statusResponse.isLogin());
-    }
-    
-    @Test
-    public void loginFailedWithWrongCode() {
-        //login before send code
-        HttpResponse httpResponse = postRequest("/api/v1/login", VALID_PARAMETER, null);
-        Assertions.assertEquals(SC_FORBIDDEN, httpResponse.statusCode);
-        
-        //发送验证码
-        postRequest("/api/v1/code", VALID_PARAMETER, null);
-        //login with wrong code
-        AuthController.TelAndCode wrong = new AuthController.TelAndCode(VALID_PARAMETER.getTel(), "123456");
-        httpResponse = postRequest("/api/v1/login", wrong, null);
-        Assertions.assertEquals(SC_FORBIDDEN, httpResponse.statusCode);
-        //login success
-        httpResponse = postRequest("/api/v1/login", VALID_PARAMETER, null);
-        Assertions.assertEquals(SC_OK, httpResponse.statusCode);
     }
     
     
