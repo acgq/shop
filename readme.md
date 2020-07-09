@@ -1,5 +1,5 @@
 # 小微店铺
-
+[![Run on Repl.it](https://repl.it/badge/github/acgq/shop)](https://repl.it/github/acgq/shop)
 ## 功能描述
 ### 基本功能
 
