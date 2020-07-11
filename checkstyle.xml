@@ -4,10 +4,10 @@
         "http://www.puppycrawl.com/dtds/configuration_1_1.dtd">
 <module name="Checker">
     <property name="localeLanguage" value="en"/>
-    <module name="SuppressionFilter">
-        <property name="file" value="suppressions.xml"/>
-        <property name="optional" value="false"/>
-    </module>
+<!--    <module name="SuppressionFilter">-->
+<!--        <property name="file" value="suppressions.xml"/>-->
+<!--        <property name="optional" value="false"/>-->
+<!--    </module>-->
     <module name="FileTabCharacter">
         <property name="fileExtensions" value="java,xml"/>
     </module>

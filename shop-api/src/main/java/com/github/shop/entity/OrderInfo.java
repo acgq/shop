@@ -25,4 +25,12 @@ public class OrderInfo implements Serializable {
     public void setGoods(List<GoodsInfo> goods) {
         this.goods = goods;
     }
+    
+    @Override
+    public String toString() {
+        return "OrderInfo{" +
+                "orderId=" + orderId +
+                ", goods=" + goods +
+                '}';
+    }
 }

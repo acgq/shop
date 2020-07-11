@@ -93,6 +93,7 @@
                     <configLocation>${basedir}/../checkstyle.xml</configLocation>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
                     <enableRulesSummary>false</enableRulesSummary>
+                    <excludes>**/generate/**</excludes>
                 </configuration>
                 <executions>
                     <execution>

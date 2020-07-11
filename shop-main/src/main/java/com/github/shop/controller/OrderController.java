@@ -3,6 +3,7 @@ package com.github.shop.controller;
 import com.github.shop.entity.*;
 import com.github.shop.exception.BadRequestException;
 import com.github.shop.generate.Order;
+import com.github.shop.service.ExpireCache;
 import com.github.shop.service.OrderService;
 import com.github.shop.service.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 public class OrderController {
     private OrderService orderService;
     
+    private ExpireCache expireCache;
+    
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, ExpireCache expireCache) {
         this.orderService = orderService;
+        this.expireCache = expireCache;
     }
     
     // @formatter:off
@@ -264,11 +268,22 @@ public class OrderController {
      */
     @PostMapping("/order")
     public Response<OrderResponse> createOrder(@RequestBody OrderInfo orderInfo, HttpServletResponse servletResponse) {
-        orderService.deductStock(orderInfo);
+        Long userId = UserContext.getUser().getId();
+        UserWithContent<OrderInfo> userWithContent = new UserWithContent<>(userId, orderInfo);
+        checkIsRepeatedRequest(userWithContent.toString());
         
-        OrderResponse orderResponse = orderService.createOrder(orderInfo, UserContext.getUser().getId());
+        orderService.deductStock(orderInfo);
+        OrderResponse orderResponse = orderService.createOrder(orderInfo, userId);
         servletResponse.setStatus(HttpServletResponse.SC_CREATED);
         return Response.ofData(orderResponse);
+    }
+    
+    private void checkIsRepeatedRequest(String content) {
+        if (!expireCache.isExpire(content)) {
+            throw new BadRequestException("请勿短时重复提交");
+        } else {
+            expireCache.put(content);
+        }
     }
     
     // @formatter:off

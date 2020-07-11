@@ -56,6 +56,10 @@ public class MockOrderIntegrationTest extends AbstractIntegrationTest {
         when(mockOrderRpcService.orderService.createOrder(any(), captor.capture())).thenReturn(order);
         
         HttpResponse response = postRequest("/api/v1/order", orderInfo, cookieWithUser2);
+        //重复提交
+        HttpResponse errorResponse = postRequest("/api/v1/order", orderInfo, cookieWithUser2);
+        assertEquals(SC_BAD_REQUEST, errorResponse.statusCode);
+        
         assertEquals(OrderStatus.PENDING.getName(), captor.getValue().getStatus());
         assertEquals(SC_CREATED, response.statusCode);
         Response<OrderResponse> orderResponse = response.asJson(new TypeReference<Response<OrderResponse>>() {
