@@ -19,7 +19,7 @@ public class UserRealm extends AuthorizingRealm {
     public UserRealm(VerificationService verificationService) {
         this.verificationService = verificationService;
         this.setCredentialsMatcher((token, info) ->
-                new String((char[]) token.getCredentials()).equals(info.getCredentials()));
+                token.getCredentials() != null && new String((char[]) token.getCredentials()).equals(info.getCredentials()));
     }
     
     @Override
