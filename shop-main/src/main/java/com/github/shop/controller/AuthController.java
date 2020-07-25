@@ -106,6 +106,7 @@ public class AuthController {
      */
     @GetMapping("/status")
     public StatusResponse getStatus() {
+        System.out.println("轮到我了");
         User user = UserContext.getUser();
         if (user != null) {
             return StatusResponse.loginResponse(user);
