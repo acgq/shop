@@ -28,7 +28,7 @@ public class ShiroConfig {
     private String redisHost;
     
     @Value("${spring.redis.port}")
-    private String redisPort;
+    private int redisPort;
     
     public ShiroConfig() {
     }
