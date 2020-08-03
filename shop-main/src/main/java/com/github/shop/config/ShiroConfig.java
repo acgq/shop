@@ -6,8 +6,6 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
-import org.apache.shiro.session.mgt.DefaultSessionManager;
-import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -15,7 +13,6 @@ import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
-import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -71,27 +68,12 @@ public class ShiroConfig {
     }
     
     @Bean
-    public RedisManager redisManager() {
+    public RedisCacheManager redisCacheManager() {
         RedisManager redisManager = new RedisManager();
-        return redisManager;
-    }
-    
-    @Bean
-    public RedisCacheManager redisCacheManager(RedisManager redisManager) {
         redisManager.setHost(redisHost + ":" + redisPort);
         RedisCacheManager cacheManager = new RedisCacheManager();
         cacheManager.setRedisManager(redisManager);
-        //set principal id field name as tel number
-        cacheManager.setPrincipalIdFieldName("tel");
         return cacheManager;
     }
     
-    @Bean
-    public SessionManager sessionManager(RedisManager redisManager) {
-        RedisSessionDAO sessionDAO = new RedisSessionDAO();
-        sessionDAO.setRedisManager(redisManager);
-        SessionManager sessionManager = new DefaultWebSessionManager();
-        ((DefaultSessionManager) sessionManager).setSessionDAO(sessionDAO);
-        return sessionManager;
-    }
 }
